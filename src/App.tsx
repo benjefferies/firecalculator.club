@@ -1,293 +1,267 @@
-import { useForm } from "react-hook-form";
-import "./App.css";
+import {
+  Button,
+  createTheme,
+  Divider,
+  FormControlLabel,
+  Grid,
+  makeStyles,
+  NoSsr,
+  Radio,
+  RadioGroup,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from '@material-ui/core';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import './App.css';
+import {
+  calculateFireAmountBasedOnDesiredFireAge,
+  calculateFireAmountBasedOnDesiredRoi,
+  Fire,
+  FireData,
+  formatCurrency,
+} from './service/FireService';
 
-type FireData = {
-  retirementFundTotal: number;
-  generalFundTotal: number;
-  retirementFundAnnualInvestments: number;
-  generalFundAnnualInvestments: number;
-  investingRoi: number;
-  drawdownRoi: number;
-  currentAge: number;
-  retirementFundAccessAge: number;
-  desiredAge?: number;
-  desiredAnnualRoi?: number;
-};
+const theme = createTheme();
+const useStyles = makeStyles((theme) => ({
+  root: { minHeight: '100vh', height: '100vh', backgroundColor: '#ced4da' },
+  inner: { minHeight: '100vh', height: '100vh', backgroundColor: '#f8f9fa' },
+  dividerFullWidth: {
+    margin: `5px 0 0 ${theme.spacing(2)}px`,
+  },
+}));
 
-type FireAmount = {
-  retirementFundTotal: number;
-  generalFundTotal: number;
-};
-
-function compoundInterest(
-  principal: number,
-  rate: number,
-  time: number = 1,
-  timesPerYear: number = 1
-) {
-  const amount =
-    principal * Math.pow(1 + rate / timesPerYear, timesPerYear * time);
-  const interest = amount - principal;
-  return interest;
-}
-
-function drawdown(
-  p: number,
-  a: number,
-  n: number = 1,
-  t: number = 1
-) {
-  const ac = Math.pow(a, 1/(n*t));
-  const pc = Math.pow(p, 1/(n*t));
-  const r = (n * (ac - pc)) / pc
-  console.log(r)
-}
-
-function calculateFireAmountRoi(desiredAnnualRoi: number, data: FireData): FireAmount {
-  let principalRetirementAmount = data.retirementFundTotal;
-  let principalGeneralAmount = data.generalFundTotal;
-  let principalRetirementAmountDrawdownGrowth = compoundInterest(
-    principalRetirementAmount,
-    data.drawdownRoi * 0.01
-  );
-  let principalGeneralAmountDrawdownGrowth = compoundInterest(
-    principalGeneralAmount,
-    data.drawdownRoi * 0.01
-  );
-  let retirementAge = data.currentAge;
-  while (
-    principalRetirementAmountDrawdownGrowth + principalGeneralAmountDrawdownGrowth <
-    desiredAnnualRoi
-  ) {
-    const principalRetirementAmountGrowth = compoundInterest(
-      principalRetirementAmount,
-      data.investingRoi * 0.01
-    );
-    const principalGeneralAmountGrowth = compoundInterest(
-      principalGeneralAmount,
-      data.investingRoi * 0.01
-    );
-    principalRetirementAmount +=
-      principalRetirementAmountGrowth + data.retirementFundAnnualInvestments;
-    principalGeneralAmount +=
-      principalGeneralAmountGrowth + data.generalFundAnnualInvestments;
-    retirementAge++;
-    principalRetirementAmountDrawdownGrowth = compoundInterest(
-      principalRetirementAmount,
-      data.drawdownRoi * 0.01
-    );
-    principalGeneralAmountDrawdownGrowth = compoundInterest(
-      principalGeneralAmount,
-      data.drawdownRoi * 0.01
-    );
-  }
-  console.log(
-    {
-      principalRetirementAmount: principalRetirementAmount.toFixed(2),
-      principalGeneralAmount: principalGeneralAmount.toFixed(2),
-      principalRetirementAmountDrawdownGrowth: principalRetirementAmountDrawdownGrowth.toFixed(2),
-      principalGeneralAmountDrawdownGrowth: principalGeneralAmountDrawdownGrowth.toFixed(2),
-      retirementAge,
-    },
-    "Retirement"
-  );
-  return {
-    retirementFundTotal: principalRetirementAmount,
-    generalFundTotal: principalGeneralAmount
-  };
-}
-
-function calculateFireAmountAge(
-  desiredAge: number,
-  data: FireData
-): FireAmount {
-  const years = desiredAge - data.currentAge;
-  let principalRetirementAmount = data.retirementFundTotal;
-  let principalGeneralAmount = data.generalFundTotal;
-  for (let y = 0; y < years; y++) {
-    const principalRetirementAmountGrowth = compoundInterest(
-      principalRetirementAmount,
-      data.investingRoi * 0.01
-    );
-    const principalGeneralAmountGrowth = compoundInterest(
-      principalGeneralAmount,
-      data.investingRoi * 0.01
-    );
-    principalRetirementAmount +=
-      principalRetirementAmountGrowth + data.retirementFundAnnualInvestments;
-    principalGeneralAmount +=
-      principalGeneralAmountGrowth + data.generalFundAnnualInvestments;
-  }
-  let principalRetirementAmountDrawdownGrowth = compoundInterest(
-    principalRetirementAmount,
-    data.drawdownRoi * 0.01
-  );
-  let principalGeneralAmountDrawdownGrowth = compoundInterest(
-    principalGeneralAmount,
-    data.drawdownRoi * 0.01
-  );
-  console.log(
-    {
-      principalRetirementAmount: principalRetirementAmount.toFixed(2),
-      principalGeneralAmount: principalGeneralAmount.toFixed(2),
-      principalRetirementAmountDrawdownGrowth: principalRetirementAmountDrawdownGrowth.toFixed(2),
-      principalGeneralAmountDrawdownGrowth: principalGeneralAmountDrawdownGrowth.toFixed(2),
-    },
-    "Retirement"
-  );
-  return {
-    retirementFundTotal: principalRetirementAmount,
-    generalFundTotal: principalGeneralAmount
-  };
-}
-
-function calculateFire(data: FireData) {
-  let fire: FireAmount;
-  if (data.desiredAge) {
-    fire = calculateFireAmountAge(data.desiredAge, data);
-  } else if (data.desiredAnnualRoi) {
-    fire = calculateFireAmountRoi(data.desiredAnnualRoi, data);
-    let generalFundTotal = fire.generalFundTotal
-    let age = data.currentAge;
-    while (generalFundTotal >= 0 && age <= data.retirementFundAccessAge) {
-      generalFundTotal = generalFundTotal - data.desiredAnnualRoi + compoundInterest(generalFundTotal, data.drawdownRoi * 0.01)
-      age++;
-    }
-    console.log({age, generalFundTotal}, "FIRE ROI")
-    if (age < data.retirementFundAccessAge) {
-      console.log("Ran out of funds before retirement")
-    }
-    let retirementFundTotal = fire.retirementFundTotal + generalFundTotal
-    let retirementAge = data.retirementFundAccessAge;
-    while (retirementFundTotal >= 0 && retirementAge <= 100) {
-      retirementFundTotal = retirementFundTotal - data.desiredAnnualRoi + compoundInterest(retirementFundTotal, data.drawdownRoi * 0.01)
-      age++;
-    }
-    console.log({age, retirementAge}, "FIRE ROI")
+function calculateFire(data: FireData): Fire {
+  if (data.calculationType === 'retire_age' && data.targetAge) {
+    return calculateFireAmountBasedOnDesiredFireAge(data.targetAge, data);
+  } else if (data.calculationType === 'retire_roi_amount' && data.targetAnnualRoi) {
+    return calculateFireAmountBasedOnDesiredRoi(data.targetAnnualRoi, data);
   } else {
-    throw new Error("No data")
+    throw new Error('No data');
   }
+}
+
+function errorHelperText(errorField: any, text: string) {
+  return errorField !== undefined ? text : '';
 }
 
 function App() {
+  const classes = useStyles();
+  const [fire, setFire] = useState<Fire>();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FireData>();
-  const onSubmit = (data: FireData) => calculateFire(data);
-
-  console.log(watch("retirementFundAnnualInvestments")); // watch input type="number"  value by passing the name of it
+    getValues,
+    control,
+  } = useForm<FireData>({
+    defaultValues: {
+      calculationType: 'retire_age',
+    },
+  });
+  const onSubmit = (data: FireData) => {
+    setFire(calculateFire(data));
+  };
+  const [calculationType] = watch(['calculationType']);
 
   return (
-    /* "handleSubmit" will validate your input type="number" s before invoking "onSubmit" */
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div id="investing">
-        <label>Retirement Fund</label>
-        <input
-          type="number"
-          defaultValue={0}
-          {...register("retirementFundTotal", {
-            required: true,
-            valueAsNumber: true,
-          })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.retirementFundTotal && <span>This field is required</span>}
-        <label>Investment Fund</label>
-        <input
-          type="number"
-          defaultValue={0}
-          {...register("generalFundTotal", {
-            required: true,
-            valueAsNumber: true,
-          })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.generalFundTotal && <span>This field is required</span>}
-        <label>Retirement Fund Annual Contribution</label>
-        <input
-          type="number"
-          defaultValue={20000}
-          {...register("retirementFundAnnualInvestments", {
-            required: true,
-            valueAsNumber: true,
-          })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.retirementFundAnnualInvestments && (
-          <span>This field is required</span>
-        )}
-        <label>Investment Fund Annual Contribution</label>
-        <input
-          type="number"
-          defaultValue={40000}
-          {...register("generalFundAnnualInvestments", {
-            required: true,
-            valueAsNumber: true,
-          })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.generalFundAnnualInvestments && (
-          <span>This field is required</span>
-        )}
-      </div>
-      <div id="return-on-investment">
-        <label>Investing ROI</label>
-        <input
-          type="number"
-          defaultValue={6}
-          {...register("investingRoi", { required: true, valueAsNumber: true })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.investingRoi && <span>This field is required</span>}
-        <label>Drawdown ROI</label>
-        <input
-          type="number"
-          defaultValue={6}
-          {...register("drawdownRoi", { required: true, valueAsNumber: true })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.drawdownRoi && <span>This field is required</span>}
-      </div>
-      <div id="fire">
-        <label>Age</label>
-        <input
-          type="number"
-          defaultValue={28}
-          {...register("currentAge", { required: true, valueAsNumber: true })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.currentAge && <span>This field is required</span>}
-        <label>Age Retirement Fund Accessible</label>
-        <input
-          type="number"
-          defaultValue={57}
-          {...register("retirementFundAccessAge", {
-            required: true,
-            valueAsNumber: true,
-          })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.retirementFundAccessAge && <span>This field is required</span>}
-        <label>Desired FIRE Age</label>
-        <input
-          type="number"
-          {...register("desiredAge", { valueAsNumber: true })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.desiredAge && <span>This field is required</span>}
-        <label>Desired RIO</label>
-        <input
-          type="number"
-          {...register("desiredAnnualRoi", { valueAsNumber: true })}
-        />
-        {/* errors will return when field validation fails  */}
-        {errors.desiredAnnualRoi && <span>This field is required</span>}
-      </div>
-      <input type="submit" />
-    </form>
+    <div className={classes.root}>
+      <NoSsr>
+        <ThemeProvider theme={theme}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container item justifyContent="center" lg={12}>
+              <Grid container item lg={6} direction="column" spacing={2} className={classes.inner}>
+                <Typography align="center" variant="h1">
+                  FIRE Calculator
+                </Typography>
+                <Grid item container justifyContent="space-evenly">
+                  <Controller
+                    rules={{ required: true }}
+                    name="calculationType"
+                    render={({ field }) => (
+                      <RadioGroup row {...register('calculationType')} {...field}>
+                        <FormControlLabel value={'retire_age'} control={<Radio />} label="How much can I drawdown when I FIRE?" />
+                        <FormControlLabel
+                          value={'retire_roi_amount'}
+                          control={<Radio />}
+                          label="What age will I be when I reach my target FIRE age"
+                        />
+                      </RadioGroup>
+                    )}
+                    control={control}
+                  />
+                </Grid>
+
+                <Divider component="div" />
+                <div>
+                  <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                    Retirement Investments
+                  </Typography>
+                </div>
+                <Grid item container justifyContent="space-evenly">
+                  <TextField
+                    variant="outlined"
+                    label="Retirement Fund"
+                    type="number"
+                    error={errors.retirementFundTotal !== undefined}
+                    helperText={errorHelperText(errors.retirementFundTotal, 'This field is required')}
+                    {...register('retirementFundTotal', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                  <TextField
+                    variant="outlined"
+                    label="Annual Contribution"
+                    type="number"
+                    error={errors.retirementFundAnnualInvestments !== undefined}
+                    helperText={errorHelperText(errors.retirementFundAnnualInvestments, 'This field is required')}
+                    {...register('retirementFundAnnualInvestments', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                </Grid>
+
+                <Divider component="div" />
+                <div>
+                  <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                    General Investments
+                  </Typography>
+                </div>
+                <Grid item container justifyContent="space-evenly">
+                  <TextField
+                    variant="outlined"
+                    label="Investment Fund"
+                    type="number"
+                    error={errors.generalFundTotal !== undefined}
+                    helperText={errorHelperText(errors.generalFundTotal, 'This field is required')}
+                    {...register('generalFundTotal', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                  <TextField
+                    variant="outlined"
+                    label="Annual Contribution"
+                    type="number"
+                    error={errors.generalFundAnnualInvestments !== undefined}
+                    helperText={errorHelperText(errors.generalFundAnnualInvestments, 'This field is required')}
+                    {...register('generalFundAnnualInvestments', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                </Grid>
+
+                <Divider component="div" />
+                <div>
+                  <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                    Investment returns
+                  </Typography>
+                </div>
+                <Grid item container justifyContent="space-evenly">
+                  <TextField
+                    variant="outlined"
+                    label="Investing Return %"
+                    type="number"
+                    error={errors.investingRoi !== undefined}
+                    helperText={errorHelperText(errors.investingRoi, 'This field is required')}
+                    {...register('investingRoi', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                  <TextField
+                    variant="outlined"
+                    label="Drawdown Return %"
+                    type="number"
+                    error={errors.drawdownRoi !== undefined}
+                    helperText={errorHelperText(errors.drawdownRoi, 'This field is required')}
+                    {...register('drawdownRoi', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                </Grid>
+
+                <Divider />
+                <Grid item container justifyContent="space-evenly">
+                  <TextField
+                    variant="outlined"
+                    label="Age"
+                    type="number"
+                    error={errors.currentAge !== undefined}
+                    helperText={errorHelperText(errors.currentAge, 'This field is required')}
+                    {...register('currentAge', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                  <TextField
+                    variant="outlined"
+                    label="Retirement Fund Age"
+                    type="number"
+                    error={errors.retirementFundAccessAge !== undefined}
+                    helperText={errorHelperText(errors.retirementFundAccessAge, 'This field is required')}
+                    {...register('retirementFundAccessAge', {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
+                  />
+                  {calculationType === 'retire_age' && (
+                    <>
+                      <TextField
+                        variant="outlined"
+                        label="Target FIRE Age"
+                        type="number"
+                        error={errors.targetAge !== undefined}
+                        helperText={errorHelperText(errors.targetAge, 'This field is required')}
+                        {...register('targetAge', { valueAsNumber: true, required: calculationType === 'retire_age' })}
+                      />
+                    </>
+                  )}
+                  {calculationType === 'retire_roi_amount' && (
+                    <>
+                      <TextField
+                        variant="outlined"
+                        label="Target Drawdown"
+                        type="number"
+                        error={errors.targetAnnualRoi !== undefined}
+                        helperText={errorHelperText(errors.targetAnnualRoi, 'This field is required')}
+                        {...register('targetAnnualRoi', { valueAsNumber: true, required: calculationType === 'retire_roi_amount' })}
+                      />
+                    </>
+                  )}
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <Button variant="contained" color="primary" type="submit">
+                    Calculate
+                  </Button>
+                </Grid>
+                <Grid item container >
+                  {fire && (
+                    <Typography variant="body1">
+                      If you FIRE at{' '}
+                      <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAmount.fireAge}</strong>{' '}
+                      you will have <strong>{formatCurrency(fire.fireAmount.generalFundAtFire)}</strong> in your general investments. When
+                      you reach the retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
+                      <strong>{formatCurrency(fire.fireAmount.retirementFundTotal)}</strong> in your pension. From your general investments
+                      can drawdown <strong>{formatCurrency(fire.generalDrawdownAmount)}</strong> from{' '}
+                      <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAmount.fireAge : getValues('targetAge')}</strong> until{' '}
+                      <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
+                      <strong>{`${formatCurrency(fire.pensionDrawdownAmount)}`}</strong>.
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </form>
+        </ThemeProvider>
+      </NoSsr>
+    </div>
   );
 }
 
