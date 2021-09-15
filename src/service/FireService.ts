@@ -25,6 +25,7 @@ export type FireData = {
 
 export type FireAmount = {
   retirementFundTotal: number;
+  retirementFundAtFire: number;
   generalFundAtFire: number;
   fireAge: number;
 };
@@ -74,6 +75,7 @@ export function calculateFireAmountBasedOnDesiredRoi(
       data.retirementFundAnnualInvestments;
     fireAge++;
   }
+  let retirementFundAtFire = retirementInvestmentAmount;
 
   for (let y = 0; y < data.retirementFundAccessAge - fireAge; y++) {
     retirementInvestmentAmount += compoundInterest(
@@ -87,6 +89,7 @@ export function calculateFireAmountBasedOnDesiredRoi(
     pensionDrawdownAmount: desiredAnnualRoi,
     fireAmount: {
       retirementFundTotal: retirementInvestmentAmount,
+      retirementFundAtFire,
       generalFundAtFire: generalInvestmentAmount,
       fireAge,
     },
@@ -152,6 +155,7 @@ export function calculateFireAmountBasedOnDesiredFireAge(
     pensionDrawdownAmount: hasRetirementFund ? pensionDrawdownAmount : generalDrawdownAmount,
     fireAmount: {
       retirementFundTotal: retirementAmountAtRetirementAge,
+      retirementFundAtFire: retirementAmountInvestingToDesiredFireAge,
       generalFundAtFire: generalAmountAtFireAge,
       fireAge: desiredAge,
     },

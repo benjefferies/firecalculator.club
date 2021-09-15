@@ -10,17 +10,19 @@ import {
   RadioGroup,
   TextField,
   ThemeProvider,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { useState } from 'react';
+import Chart from 'react-apexcharts';
 import { Controller, useForm } from 'react-hook-form';
 import './App.css';
 import {
+  AVERAGE_LIFE_EXPECTANCY,
   calculateFireAmountBasedOnDesiredFireAge,
   calculateFireAmountBasedOnDesiredRoi,
-  Fire,
+  compoundInterest, Fire,
   FireData,
-  formatCurrency,
+  formatCurrency
 } from './service/FireService';
 
 const theme = createTheme();
@@ -46,6 +48,11 @@ function errorHelperText(errorField: any, text: string) {
   return errorField !== undefined ? text : '';
 }
 
+type Coords = {
+  x: number|null;
+  y: number|null;
+};
+
 function App() {
   const classes = useStyles();
   const [fire, setFire] = useState<Fire>();
@@ -64,7 +71,31 @@ function App() {
   const onSubmit = (data: FireData) => {
     setFire(calculateFire(data));
   };
-  const [calculationType] = watch(['calculationType']);
+  const [calculationType, drawdownRoi, retirementFundAccessAge, currentAge] = watch(['calculationType', 'drawdownRoi', 'retirementFundAccessAge', 'currentAge']);
+
+  function recursivelyDrawdownGeneral(fireAge: number, amount: number, drawdown: number): Coords[] {
+    const coords: Coords[] = [];
+    while (fireAge < retirementFundAccessAge || amount <= 0) {
+      coords.push({ y: amount, x: fireAge });
+      amount = amount - drawdown + compoundInterest(amount, drawdownRoi);
+      fireAge++;
+    }
+    return coords;
+  }
+
+  function eventuallyRecursivelyDrawdownRetirement(retirementAge: number, amount: number, drawdown: number): Coords[] {
+    const coords: Coords[] = [];
+    for (let i = currentAge; i < retirementAge; i++) {
+      coords.push({y: null, x: currentAge})
+    }
+    while (retirementAge < AVERAGE_LIFE_EXPECTANCY && amount >= 0) {
+      coords.push({ y: amount, x: retirementAge });
+      const comInt = compoundInterest(amount, drawdownRoi)
+      amount = amount - drawdown + comInt;
+      retirementAge++;
+    }
+    return coords;
+  }
 
   return (
     <div className={classes.root}>
@@ -240,22 +271,53 @@ function App() {
                   <Button variant="contained" color="primary" type="submit">
                     Calculate
                   </Button>
-                </Grid>
-                <Grid item container >
                   {fire && (
-                    <Typography variant="body1">
-                      If you FIRE at{' '}
-                      <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAmount.fireAge}</strong>{' '}
-                      you will have <strong>{formatCurrency(fire.fireAmount.generalFundAtFire)}</strong> in your general investments. When
-                      you reach the retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.fireAmount.retirementFundTotal)}</strong> in your pension. From your general investments
-                      can drawdown <strong>{formatCurrency(fire.generalDrawdownAmount)}</strong> from{' '}
-                      <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAmount.fireAge : getValues('targetAge')}</strong> until{' '}
-                      <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
-                      <strong>{`${formatCurrency(fire.pensionDrawdownAmount)}`}</strong>.
-                    </Typography>
+                      <Typography variant="body1">
+                        If you FIRE at{' '}
+                        <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAmount.fireAge}</strong>{' '}
+                        you will have <strong>{formatCurrency(fire.fireAmount.generalFundAtFire)}</strong> in your general investments. When
+                        you reach the retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
+                        <strong>{formatCurrency(fire.fireAmount.retirementFundTotal)}</strong> in your pension. From your general
+                        investments can drawdown <strong>{formatCurrency(fire.generalDrawdownAmount)}</strong> from{' '}
+                        <strong>
+                          {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAmount.fireAge : getValues('targetAge')}
+                        </strong>{' '}
+                        until <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your
+                        investments <strong>{`${formatCurrency(fire.pensionDrawdownAmount)}`}</strong>.
+                      </Typography>
                   )}
                 </Grid>
+                      {fire && <Chart
+                        options={{
+                          stroke: {
+                            curve: 'smooth',
+                          },
+                          markers: {
+                            size: 0,
+                          },
+                        }}
+                        series={[
+                          {
+                            data: eventuallyRecursivelyDrawdownRetirement(
+                              retirementFundAccessAge,
+                              fire?.fireAmount.retirementFundTotal,
+                              fire.pensionDrawdownAmount
+                            ),
+                            name: 'Retirement Investments',
+                          },
+                          {
+                            data: recursivelyDrawdownGeneral(
+                              fire.fireAmount.fireAge,
+                              fire?.fireAmount.generalFundAtFire,
+                              fire.generalDrawdownAmount
+                            ),
+                            name: 'General Investments',
+                          },
+                        ]}
+                        type="line"
+                        width="100%"
+                        height="100%"
+                      />}
               </Grid>
             </Grid>
           </form>
