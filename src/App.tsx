@@ -63,6 +63,7 @@ function App() {
     },
   });
   const onSubmit = (data: FireData) => {
+    ReactGA.event({category: 'fire', action: 'calculate'})
     const fire = calculateFire(data);
     setFire(fire);
   };
