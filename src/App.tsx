@@ -10,23 +10,18 @@ import {
   RadioGroup,
   TextField,
   ThemeProvider,
-  Typography
+  Typography,
+  Theme,
 } from '@material-ui/core';
 import { useState } from 'react';
 import Chart from 'react-apexcharts';
 import { Controller, useForm } from 'react-hook-form';
 import './App.css';
-import {
-  AVERAGE_LIFE_EXPECTANCY,
-  calculateFireAmountBasedOnDesiredFireAge,
-  calculateFireAmountBasedOnDesiredRoi,
-  compoundInterest, Fire,
-  FireData,
-  formatCurrency
-} from './service/FireService';
+import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi, formatCurrency } from './service/FireService';
+import { Fire, FireData } from './types/types';
 
 const theme = createTheme();
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: { minHeight: '100vh', height: '100vh', backgroundColor: '#ced4da' },
   inner: { minHeight: '100vh', height: '100vh', backgroundColor: '#f8f9fa' },
   dividerFullWidth: {
@@ -48,11 +43,6 @@ function errorHelperText(errorField: any, text: string) {
   return errorField !== undefined ? text : '';
 }
 
-type Coords = {
-  x: number|null;
-  y: number|null;
-};
-
 function App() {
   const classes = useStyles();
   const [fire, setFire] = useState<Fire>();
@@ -69,33 +59,10 @@ function App() {
     },
   });
   const onSubmit = (data: FireData) => {
-    setFire(calculateFire(data));
+    const fire = calculateFire(data);
+    setFire(fire);
   };
-  const [calculationType, drawdownRoi, retirementFundAccessAge, currentAge] = watch(['calculationType', 'drawdownRoi', 'retirementFundAccessAge', 'currentAge']);
-
-  function recursivelyDrawdownGeneral(fireAge: number, amount: number, drawdown: number): Coords[] {
-    const coords: Coords[] = [];
-    while (fireAge < retirementFundAccessAge || amount <= 0) {
-      coords.push({ y: amount, x: fireAge });
-      amount = amount - drawdown + compoundInterest(amount, drawdownRoi);
-      fireAge++;
-    }
-    return coords;
-  }
-
-  function eventuallyRecursivelyDrawdownRetirement(retirementAge: number, amount: number, drawdown: number): Coords[] {
-    const coords: Coords[] = [];
-    for (let i = currentAge; i < retirementAge; i++) {
-      coords.push({y: null, x: currentAge})
-    }
-    while (retirementAge < AVERAGE_LIFE_EXPECTANCY && amount >= 0) {
-      coords.push({ y: amount, x: retirementAge });
-      const comInt = compoundInterest(amount, drawdownRoi)
-      amount = amount - drawdown + comInt;
-      retirementAge++;
-    }
-    return coords;
-  }
+  const [calculationType] = watch(['calculationType']);
 
   return (
     <div className={classes.root}>
@@ -272,52 +239,60 @@ function App() {
                     Calculate
                   </Button>
                   {fire && (
-                      <Typography variant="body1">
-                        If you FIRE at{' '}
-                        <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAmount.fireAge}</strong>{' '}
-                        you will have <strong>{formatCurrency(fire.fireAmount.generalFundAtFire)}</strong> in your general investments. When
-                        you reach the retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
-                        <strong>{formatCurrency(fire.fireAmount.retirementFundTotal)}</strong> in your pension. From your general
-                        investments can drawdown <strong>{formatCurrency(fire.generalDrawdownAmount)}</strong> from{' '}
-                        <strong>
-                          {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAmount.fireAge : getValues('targetAge')}
-                        </strong>{' '}
-                        until <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your
-                        investments <strong>{`${formatCurrency(fire.pensionDrawdownAmount)}`}</strong>.
-                      </Typography>
+                    <Typography variant="body1">
+                      If you FIRE at{' '}
+                      <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAge}</strong> you will have{' '}
+                      <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments. When you reach the
+                      retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
+                      <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your pension. From your general investments can
+                      drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
+                      <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}</strong> until{' '}
+                      <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
+                      <strong>{`${formatCurrency(fire.drawdown.pensionDrawdownAmount)}`}</strong>.
+                    </Typography>
                   )}
                 </Grid>
-                      {fire && <Chart
-                        options={{
-                          stroke: {
-                            curve: 'smooth',
+                {fire && (
+                  <Chart
+                    options={{
+                      stroke: {
+                        curve: 'straight',
+                      },
+                      markers: {
+                        size: 2,
+                      },
+                      yaxis: {
+                        labels: {
+                          formatter: (value: number) => {
+                            return formatCurrency(value);
                           },
-                          markers: {
-                            size: 0,
-                          },
-                        }}
-                        series={[
-                          {
-                            data: eventuallyRecursivelyDrawdownRetirement(
-                              retirementFundAccessAge,
-                              fire?.fireAmount.retirementFundTotal,
-                              fire.pensionDrawdownAmount
-                            ),
-                            name: 'Retirement Investments',
-                          },
-                          {
-                            data: recursivelyDrawdownGeneral(
-                              fire.fireAmount.fireAge,
-                              fire?.fireAmount.generalFundAtFire,
-                              fire.generalDrawdownAmount
-                            ),
-                            name: 'General Investments',
-                          },
-                        ]}
-                        type="line"
-                        width="100%"
-                        height="100%"
-                      />}
+                        },
+                      },
+                    }}
+                    series={[
+                      {
+                        data: Object.keys({ ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph }).map((k) => {
+                          const merged = { ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph };
+                          const kNum = Number.parseInt(k);
+                          const formattedAmount = merged[kNum].toFixed(2);
+                          return [kNum, formattedAmount];
+                        }),
+                        name: 'General Investments',
+                      },
+                      {
+                        data: Object.keys({ ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph }).map((k) => {
+                          const merged = { ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph };
+                          const kNum = Number.parseInt(k);
+                          return [kNum, merged[kNum]];
+                        }),
+                        name: 'Retirement Investments',
+                      },
+                    ]}
+                    type="line"
+                    width="100%"
+                    height="100%"
+                  />
+                )}
               </Grid>
             </Grid>
           </form>
