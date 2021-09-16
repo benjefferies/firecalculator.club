@@ -19,6 +19,9 @@ import { Controller, useForm } from 'react-hook-form';
 import './App.css';
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi, formatCurrency } from './service/FireService';
 import { Fire, FireData } from './types/types';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-207743771-1', {debug: true,});
 
 const theme = createTheme();
 const useStyles = makeStyles((theme: Theme) => ({
