@@ -21,7 +21,8 @@ import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDes
 import { Fire, FireData } from './types/types';
 import ReactGA from 'react-ga';
 
-ReactGA.initialize('UA-207743771-1', {debug: true,});
+ReactGA.initialize('UA-207743771-1');
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const theme = createTheme();
 const useStyles = makeStyles((theme: Theme) => ({
