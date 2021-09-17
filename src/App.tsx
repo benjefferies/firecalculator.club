@@ -74,7 +74,7 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <Box mx={{ xs: 0, sm: 4, md: 16, lg: 32 }} className={classes.inner}>
+      <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }} className={classes.inner}>
         <NoSsr>
           <ThemeProvider theme={theme}>
             <form onSubmit={handleSubmit(onSubmit)}>
