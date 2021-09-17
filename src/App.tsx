@@ -12,6 +12,7 @@ import {
   ThemeProvider,
   Typography,
   Theme,
+  Box,
 } from '@material-ui/core';
 import { useState } from 'react';
 import Chart from 'react-apexcharts';
@@ -24,10 +25,12 @@ import ReactGA from 'react-ga';
 ReactGA.initialize('UA-207743771-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
-const theme = createTheme();
+const theme = createTheme({
+  spacing: 8,
+});
 const useStyles = makeStyles((theme: Theme) => ({
-  root: { minHeight: '100vh', height: '100vh', backgroundColor: '#ced4da' },
-  inner: { minHeight: '100vh', height: '100vh', backgroundColor: '#f8f9fa' },
+  root: {  minHeight: '100vh', },
+  inner: { minHeight: '100vh' },
   dividerFullWidth: {
     margin: `5px 0 0 ${theme.spacing(2)}px`,
   },
@@ -63,7 +66,7 @@ function App() {
     },
   });
   const onSubmit = (data: FireData) => {
-    ReactGA.event({category: 'fire', action: 'calculate'})
+    ReactGA.event({ category: 'fire', action: 'calculate' });
     const fire = calculateFire(data);
     setFire(fire);
   };
@@ -71,39 +74,39 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <NoSsr>
-        <ThemeProvider theme={theme}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container item justifyContent="center" lg={12}>
-              <Grid container item lg={6} direction="column" spacing={2} className={classes.inner}>
-                <Typography align="center" variant="h1">
-                  FIRE Calculator
-                </Typography>
-                <Grid item container justifyContent="space-evenly">
-                  <Controller
-                    rules={{ required: true }}
-                    name="calculationType"
-                    render={({ field }) => (
-                      <RadioGroup row {...register('calculationType')} {...field}>
-                        <FormControlLabel value={'retire_age'} control={<Radio />} label="How much can I drawdown when I FIRE?" />
-                        <FormControlLabel
-                          value={'retire_roi_amount'}
-                          control={<Radio />}
-                          label="What age will I be when I reach my target FIRE age"
-                        />
-                      </RadioGroup>
-                    )}
-                    control={control}
-                  />
-                </Grid>
+      <Box mx={{ xs: 0, sm: 4, md: 16, lg: 32 }} className={classes.inner}>
+        <NoSsr>
+          <ThemeProvider theme={theme}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Typography align="center" variant="h5" component="h1">
+                FIRE Calculator
+              </Typography>
+              <Grid container>
+                <Controller
+                  rules={{ required: true }}
+                  name="calculationType"
+                  render={({ field }) => (
+                    <RadioGroup row {...register('calculationType')} {...field}>
+                      <FormControlLabel value={'retire_age'} control={<Radio />} label="How much can I drawdown when I FIRE?" />
+                      <FormControlLabel
+                        value={'retire_roi_amount'}
+                        control={<Radio />}
+                        label="What age will I be when I reach my target FIRE age"
+                      />
+                    </RadioGroup>
+                  )}
+                  control={control}
+                />
+              </Grid>
 
-                <Divider component="div" />
-                <div>
-                  <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                    Retirement Investments
-                  </Typography>
-                </div>
-                <Grid item container justifyContent="space-evenly">
+              <Divider component="div" />
+              <div>
+                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                  Retirement Investments
+                </Typography>
+              </div>
+              <Grid container>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Retirement Fund"
@@ -115,6 +118,8 @@ function App() {
                       valueAsNumber: true,
                     })}
                   />
+                </Grid>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Annual Contribution"
@@ -127,14 +132,16 @@ function App() {
                     })}
                   />
                 </Grid>
+              </Grid>
 
-                <Divider component="div" />
-                <div>
-                  <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                    General Investments
-                  </Typography>
-                </div>
-                <Grid item container justifyContent="space-evenly">
+              <Divider component="div" />
+              <div>
+                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                  General Investments
+                </Typography>
+              </div>
+              <Grid container>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Investment Fund"
@@ -146,6 +153,8 @@ function App() {
                       valueAsNumber: true,
                     })}
                   />
+                </Grid>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Annual Contribution"
@@ -158,14 +167,16 @@ function App() {
                     })}
                   />
                 </Grid>
+              </Grid>
 
-                <Divider component="div" />
-                <div>
-                  <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                    Investment returns
-                  </Typography>
-                </div>
-                <Grid item container justifyContent="space-evenly">
+              <Divider component="div" />
+              <div>
+                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                  Investment returns
+                </Typography>
+              </div>
+              <Grid container>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Investing Return %"
@@ -177,6 +188,8 @@ function App() {
                       valueAsNumber: true,
                     })}
                   />
+                </Grid>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Drawdown Return %"
@@ -189,9 +202,16 @@ function App() {
                     })}
                   />
                 </Grid>
+              </Grid>
 
-                <Divider />
-                <Grid item container justifyContent="space-evenly">
+              <Divider />
+              <div>
+                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
+                  Age
+                </Typography>
+              </div>
+              <Grid container>
+                <Grid item xs={4}>
                   <TextField
                     variant="outlined"
                     label="Age"
@@ -203,6 +223,8 @@ function App() {
                       valueAsNumber: true,
                     })}
                   />
+                </Grid>
+                <Grid item xs={4}>
                   <TextField
                     variant="outlined"
                     label="Retirement Fund Age"
@@ -214,36 +236,38 @@ function App() {
                       valueAsNumber: true,
                     })}
                   />
-                  {calculationType === 'retire_age' && (
-                    <>
-                      <TextField
-                        variant="outlined"
-                        label="Target FIRE Age"
-                        type="number"
-                        error={errors.targetAge !== undefined}
-                        helperText={errorHelperText(errors.targetAge, 'This field is required')}
-                        {...register('targetAge', { valueAsNumber: true, required: calculationType === 'retire_age' })}
-                      />
-                    </>
-                  )}
-                  {calculationType === 'retire_roi_amount' && (
-                    <>
-                      <TextField
-                        variant="outlined"
-                        label="Target Drawdown"
-                        type="number"
-                        error={errors.targetAnnualRoi !== undefined}
-                        helperText={errorHelperText(errors.targetAnnualRoi, 'This field is required')}
-                        {...register('targetAnnualRoi', { valueAsNumber: true, required: calculationType === 'retire_roi_amount' })}
-                      />
-                    </>
+                </Grid>
+                <Grid item xs={4}>
+                  {calculationType === 'retire_age' ? (
+                    <TextField
+                      variant="outlined"
+                      label="Target FIRE Age"
+                      type="number"
+                      error={errors.targetAge !== undefined}
+                      helperText={errorHelperText(errors.targetAge, 'This field is required')}
+                      {...register('targetAge', { valueAsNumber: true, required: calculationType === 'retire_age' })}
+                    />
+                  ) : (
+                    <TextField
+                      variant="outlined"
+                      label="Target Drawdown"
+                      type="number"
+                      error={errors.targetAnnualRoi !== undefined}
+                      helperText={errorHelperText(errors.targetAnnualRoi, 'This field is required')}
+                      {...register('targetAnnualRoi', { valueAsNumber: true, required: calculationType === 'retire_roi_amount' })}
+                    />
                   )}
                 </Grid>
-                <Grid item container justifyContent="center">
-                  <Button variant="contained" color="primary" type="submit">
-                    Calculate
-                  </Button>
-                  {fire && (
+              </Grid>
+              <Grid>
+                <Button variant="contained" color="primary" type="submit">
+                  Calculate
+                </Button>
+              </Grid>
+              <Grid container direction="column">
+                {fire && (
+                  <>
+                    <Divider />
                     <Typography variant="body1">
                       If you FIRE at{' '}
                       <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAge}</strong> you will have{' '}
@@ -255,54 +279,58 @@ function App() {
                       <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
                       <strong>{`${formatCurrency(fire.drawdown.pensionDrawdownAmount)}`}</strong>.
                     </Typography>
-                  )}
-                </Grid>
-                {fire && (
-                  <Chart
-                    options={{
-                      stroke: {
-                        curve: 'straight',
-                      },
-                      markers: {
-                        size: 2,
-                      },
-                      yaxis: {
-                        labels: {
-                          formatter: (value: number) => {
-                            return formatCurrency(value);
+                    <Chart
+                      options={{
+                        stroke: {
+                          curve: 'straight',
+                        },
+                        markers: {
+                          size: 2,
+                        },
+                        yaxis: {
+                          labels: {
+                            formatter: (value: number) => {
+                              return formatCurrency(value);
+                            },
                           },
                         },
-                      },
-                    }}
-                    series={[
-                      {
-                        data: Object.keys({ ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph }).map((k) => {
-                          const merged = { ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph };
-                          const kNum = Number.parseInt(k);
-                          const formattedAmount = merged[kNum].toFixed(2);
-                          return [kNum, formattedAmount];
-                        }),
-                        name: 'General Investments',
-                      },
-                      {
-                        data: Object.keys({ ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph }).map((k) => {
-                          const merged = { ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph };
-                          const kNum = Number.parseInt(k);
-                          return [kNum, merged[kNum]];
-                        }),
-                        name: 'Retirement Investments',
-                      },
-                    ]}
-                    type="line"
-                    width="100%"
-                    height="100%"
-                  />
+                        xaxis: {
+                          type: 'numeric',
+                          tickAmount:
+                            window.innerWidth < 800
+                              ? 10
+                              : Object.keys({ ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph }).length,
+                        },
+                      }}
+                      series={[
+                        {
+                          data: Object.keys({ ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph }).map((k) => {
+                            const merged = { ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph };
+                            const kNum = Number.parseInt(k);
+                            const formattedAmount = merged[kNum].toFixed(2);
+                            return [kNum, formattedAmount];
+                          }),
+                          name: 'General Investments',
+                        },
+                        {
+                          data: Object.keys({ ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph }).map((k) => {
+                            const merged = { ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph };
+                            const kNum = Number.parseInt(k);
+                            return [kNum, merged[kNum]];
+                          }),
+                          name: 'Retirement Investments',
+                        },
+                      ]}
+                      type="line"
+                      width="100%"
+                    />
+                  </>
                 )}
               </Grid>
-            </Grid>
-          </form>
-        </ThemeProvider>
-      </NoSsr>
+            </form>
+          </ThemeProvider>
+        </NoSsr>
+      </Box>
     </div>
   );
 }
