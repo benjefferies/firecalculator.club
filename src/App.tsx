@@ -76,7 +76,7 @@ function App() {
   return (
     <div className={classes.root}>
       <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }} className={classes.inner}>
-        <Adsense client="pub-1383291322337575" slot="7259870550" style={{ display: 'block' }} layout="in-article" format="fluid" />
+        <Adsense client="ca-pub-1383291322337575" slot="7259870550" style={{ display: 'block' }} layout="in-article" format="fluid" />
         <NoSsr>
           <ThemeProvider theme={theme}>
             <form onSubmit={handleSubmit(onSubmit)}>
