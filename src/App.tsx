@@ -78,7 +78,7 @@ function App() {
         <NoSsr>
           <ThemeProvider theme={theme}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography align="center" variant="h5" component="h1">
+              <Typography align="center" variant="h2" component="h1">
                 FIRE Calculator
               </Typography>
               <Grid container>
