@@ -21,6 +21,7 @@ import './App.css';
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi, formatCurrency } from './service/FireService';
 import { Fire, FireData } from './types/types';
 import ReactGA from 'react-ga';
+import { Adsense } from '@ctrl/react-adsense';
 
 ReactGA.initialize('UA-207743771-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -29,7 +30,7 @@ const theme = createTheme({
   spacing: 8,
 });
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {  minHeight: '100vh', },
+  root: { minHeight: '100vh' },
   inner: { minHeight: '100vh' },
   dividerFullWidth: {
     margin: `5px 0 0 ${theme.spacing(2)}px`,
@@ -75,6 +76,7 @@ function App() {
   return (
     <div className={classes.root}>
       <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }} className={classes.inner}>
+        <Adsense client="pub-1383291322337575" slot="7259870550" style={{ display: 'block' }} layout="in-article" format="fluid" />
         <NoSsr>
           <ThemeProvider theme={theme}>
             <form onSubmit={handleSubmit(onSubmit)}>
