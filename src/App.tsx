@@ -78,7 +78,7 @@ function App() {
     const fire = calculateFire(data);
     setFire(fire);
   };
-  const [calculationType] = watch(['calculationType']);
+  const [calculationType, currentAge] = watch(['calculationType', 'currentAge']);
 
   return (
     <div className={classes.root}>
@@ -253,8 +253,8 @@ function App() {
                       label="Target FIRE Age"
                       type="number"
                       error={errors.targetAge !== undefined}
-                      helperText={errorHelperText(errors.targetAge, 'This field is required')}
-                      {...register('targetAge', { valueAsNumber: true, required: calculationType === 'retire_age' })}
+                      helperText={errorHelperText(errors.targetAge, 'Age must be the same or more than current age')}
+                      {...register('targetAge', { valueAsNumber: true, required: calculationType === 'retire_age', validate: (targetAge) => (targetAge || 0) >= currentAge })}
                     />
                   ) : (
                     <TextField
@@ -277,17 +277,25 @@ function App() {
                 {fire && (
                   <>
                     <Divider />
+                    {fire.fireAge < getValues('retirementFundAccessAge') ? <Typography variant="body1">
+                        If you FIRE at{' '}
+                        <strong>{fire.fireAge}</strong> you will have{' '}
+                        <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments. When you reach the
+                        retirement age of <strong>{Math.max(getValues('retirementFundAccessAge'), fire.fireAge)}</strong> you will have{' '}
+                        <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments. From your general investments can
+                        drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
+                        <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}</strong> until{' '}
+                        <strong>{getValues('retirementFundAccessAge')}</strong> then you can drawdown from your retirement investments{' '}
+                        <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
+                    </Typography> :
                     <Typography variant="body1">
                       If you FIRE at{' '}
-                      <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAge}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments. When you reach the
-                      retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your pension. From your general investments can
-                      drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
-                      <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}</strong> until{' '}
-                      <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>.
-                    </Typography>
+                      <strong>{fire.fireAge}</strong> you will have{' '}
+                      <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments and{' '}
+                      <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments. From your general investments can
+                      drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement investments{' '}
+                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
+                  </Typography>}
                     <Chart
                       options={{
                         stroke: {

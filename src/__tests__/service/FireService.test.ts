@@ -1,4 +1,4 @@
-import { compoundInterest, drawdown, calculateFireAmountBasedOnDesiredFireAge } from '../../service/FireService';
+import { compoundInterest, drawdown, calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from '../../service/FireService';
 import { FireData, Fire } from '../../types/types';
 import { expect, use } from 'chai';
 import chaiSubset from 'chai-subset';
@@ -14,9 +14,6 @@ describe('FireService', () => {
 
   describe('fire amount desired age', () => {
     test('Age 35 with the desire to FIRE at 35 with a retirement age of 57', () => {
-      global.navigator = {
-        language: 'en-GB',
-      } as Navigator;
       const fire = calculateFireAmountBasedOnDesiredFireAge(35, {
         currentAge: 35,
         retirementFundTotal: 1000,
@@ -44,9 +41,6 @@ describe('FireService', () => {
       expect(fire.drawdown.retirementDrawdownGraph[82]).to.be.closeTo(0, 70.19791767318077);
     });
     test('Age 35 with the desire to FIRE at 35 with a retirement age of 57 no retirement fund', () => {
-      global.navigator = {
-        language: 'en-GB',
-      } as Navigator;
       const fire = calculateFireAmountBasedOnDesiredFireAge(35, {
         currentAge: 35,
         retirementFundTotal: 0,
@@ -74,9 +68,6 @@ describe('FireService', () => {
       expect(fire.drawdown.retirementDrawdownGraph[82]).to.be.equal(0);
     });
     test('Age 35 with the desire to FIRE at 35 with a retirement age of 57 no investment fund', () => {
-      global.navigator = {
-        language: 'en-GB',
-      } as Navigator;
       expect(() =>
         calculateFireAmountBasedOnDesiredFireAge(35, {
           currentAge: 35,
@@ -93,9 +84,6 @@ describe('FireService', () => {
     });
 
     test('Age 34 with the desire to FIRE at 35 with a retirement age of 57', () => {
-      global.navigator = {
-        language: 'en-GB',
-      } as Navigator;
       const fire = calculateFireAmountBasedOnDesiredFireAge(35, {
         currentAge: 34,
         retirementFundTotal: 1000,
@@ -126,9 +114,6 @@ describe('FireService', () => {
     });
 
     test('Age 33 with the desire to FIRE at 35 with a retirement age of 57', () => {
-      global.navigator = {
-        language: 'en-GB',
-      } as Navigator;
       const fire = calculateFireAmountBasedOnDesiredFireAge(35, {
         currentAge: 33,
         retirementFundTotal: 1000,
@@ -159,9 +144,6 @@ describe('FireService', () => {
     });
 
     test('Age 32 with the desire to FIRE at 35 with a retirement age of 57', () => {
-      global.navigator = {
-        language: 'en-GB',
-      } as Navigator;
       const fire = calculateFireAmountBasedOnDesiredFireAge(35, {
         currentAge: 32,
         retirementFundTotal: 1000,
@@ -193,9 +175,6 @@ describe('FireService', () => {
   });
 
   test('Age 57 with the desire to FIRE at 57 with a retirement age of 57', () => {
-    global.navigator = {
-      language: 'en-GB',
-    } as Navigator;
     const fire = calculateFireAmountBasedOnDesiredFireAge(57, {
       currentAge: 57,
       retirementFundTotal: 1000,
@@ -227,10 +206,7 @@ describe('FireService', () => {
     expect(fire.growth.retirementGrowthGraph).to.be.empty;
   });
 
-  test('Age 57 with the desire to FIRE at 65  with a retirement age of 57', () => {
-    global.navigator = {
-      language: 'en-GB',
-    } as Navigator;
+  test('Age 57 with the desire to FIRE at 65 with a retirement age of 57', () => {
     const fire = calculateFireAmountBasedOnDesiredFireAge(65, {
       currentAge: 57,
       retirementFundTotal: 1000,
@@ -261,9 +237,6 @@ describe('FireService', () => {
   });
 
   test('Age 65 with the desire to FIRE at 65 with a retirement age of 57', () => {
-    global.navigator = {
-      language: 'en-GB',
-    } as Navigator;
     const fire = calculateFireAmountBasedOnDesiredFireAge(65, {
       currentAge: 65,
       retirementFundTotal: 1000,
@@ -292,4 +265,71 @@ describe('FireService', () => {
     expect(fire.growth.generalGrowthGraph).to.be.empty;
     expect(fire.growth.retirementGrowthGraph).to.be.empty;
   });
+
+  describe('fire amount desired roi', () => {
+
+    test('Age 35 with the desire to FIRE at £3000 before retirement age at 57', () => {
+      const fire = calculateFireAmountBasedOnDesiredRoi(3000, {
+        currentAge: 35,
+        retirementFundAccessAge: 57,
+        retirementFundTotal: 20000,
+        generalFundTotal: 10000,
+        investingRoi: 6,
+        drawdownRoi: 4,
+        retirementFundAnnualInvestments: 1000,
+        generalFundAnnualInvestments: 1000,
+        calculationType: 'retire_roi_amount',
+      });
+      expect(fire).to.containSubset({
+        drawdown: {
+          generalDrawdownAmount: 3000,
+          retirementDrawdownAmount: 3000,
+        },
+        fireAge: 57,
+        growth: {
+          generalFundAtFire: 79427.66444208944,
+          retirementFundTotal: 122390.8209243454,
+          retirementFundAtFire: 115463.03860787302,
+        },
+      } as Fire);
+      expect(fire.drawdown.generalDrawdownGraph[57]).to.be.closeTo(79427.66444208944, 3000);
+      expect(fire.drawdown.generalDrawdownGraph[82]).to.be.greaterThan(79427.66444208944);
+      expect(fire.drawdown.retirementDrawdownGraph[57]).to.be.closeTo(122390.8209243454, 3000);
+      expect(fire.drawdown.retirementDrawdownGraph[82]).to.be.greaterThan(115463.03860787302);
+      expect(fire.growth.generalGrowthGraph[35]).to.be.equal(10000);
+      expect(fire.growth.retirementGrowthGraph[57]).to.be.closeTo(122390.8209243454, 3000);
+    })
+
+    test('Age 60 with the desire to FIRE at £3000 after retirement age at 57', () => {
+      const fire = calculateFireAmountBasedOnDesiredRoi(3000, {
+        currentAge: 60,
+        retirementFundAccessAge: 57,
+        retirementFundTotal: 20000,
+        generalFundTotal: 10000,
+        investingRoi: 6,
+        drawdownRoi: 4,
+        retirementFundAnnualInvestments: 2000,
+        generalFundAnnualInvestments: 2000,
+        calculationType: 'retire_roi_amount',
+      });
+      expect(fire).to.containSubset({
+        drawdown: {
+          generalDrawdownAmount: 1272.9591155850248,
+          retirementDrawdownAmount: 1874.411219181573,
+        },
+        fireAge: 67,
+        growth: {
+          generalFundAtFire: 31823.977889625607,
+          retirementFundTotal: 46860.280479539215,
+          retirementFundAtFire: 46860.280479539215,
+        },
+      } as Fire);
+      expect(fire.drawdown.generalDrawdownGraph[67]).to.be.closeTo(31823.977889625607, 1272.9591155850248);
+      expect(fire.drawdown.generalDrawdownGraph[82]).to.be.closeTo(31823.977889625607, 1272.9591155850248);
+      expect(fire.drawdown.retirementDrawdownGraph[67]).to.be.closeTo(46860.280479539215, 1874.411219181573);
+      expect(fire.drawdown.retirementDrawdownGraph[82]).to.be.closeTo(46860.280479539215, 1874.411219181573);
+      expect(fire.growth.generalGrowthGraph[60]).to.be.equal(10000);
+      expect(fire.growth.retirementGrowthGraph[60]).to.be.equal(20000)
+    })
+  })
 });
