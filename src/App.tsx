@@ -20,7 +20,7 @@ import { useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
-import './App.css';
+import './App.scss';
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from './service/FireService';
 import { Fire, FireData } from './types/types';
 ReactGA.initialize('UA-207743771-1');
@@ -34,6 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   inner: { minHeight: '100vh' },
   dividerFullWidth: {
     margin: `5px 0 0 ${theme.spacing(2)}px`,
+    textAlign: 'center',
+    padding: '5px',
   },
 }));
 
@@ -87,20 +89,29 @@ function App() {
         <NoSsr>
           <ThemeProvider theme={theme}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography align="center" variant="h2" component="h1">
-                FIRE Calculator
-              </Typography>
-              <Grid container>
+              <div className="firecalc__title-container">
+                <h1 className="firecalc__title">
+                  How <span className="firecalc__highlighted">much</span> can you spend when you hit
+                  <span className="firecalc__highlighted"> Fire?</span>
+                </h1>
+              </div>
+              <Grid className="firecalc__radio-container" container spacing={2}>
                 <Controller
                   rules={{ required: true }}
                   name="calculationType"
                   render={({ field }) => (
-                    <RadioGroup row {...register('calculationType')} {...field}>
-                      <FormControlLabel value={'retire_age'} control={<Radio />} label="How much can I drawdown when I FIRE?" />
+                    <RadioGroup className="firecalc__radio-group" row {...register('calculationType')} {...field}>
                       <FormControlLabel
+                        className="firecalc__label"
+                        value={'retire_age'}
+                        control={<Radio />}
+                        label="How much can I drawdown when I FIRE?"
+                      />
+                      <FormControlLabel
+                        className="firecalc__label"
                         value={'retire_roi_amount'}
                         control={<Radio />}
-                        label="What age will I be when I reach my target FIRE age"
+                        label="Age will I be when I reach target FIRE age?"
                       />
                     </RadioGroup>
                   )}
@@ -108,13 +119,12 @@ function App() {
                 />
               </Grid>
 
-              <Divider component="div" />
               <div>
                 <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  Retirement Investments
+                  <div className="firecalc__section-title">Retirement Investments</div>
                 </Typography>
               </div>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
                     variant="outlined"
@@ -143,13 +153,12 @@ function App() {
                 </Grid>
               </Grid>
 
-              <Divider component="div" />
               <div>
                 <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  General Investments
+                  <div className="firecalc__section-title">General Investments</div>
                 </Typography>
               </div>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
                     variant="outlined"
@@ -178,13 +187,12 @@ function App() {
                 </Grid>
               </Grid>
 
-              <Divider component="div" />
               <div>
                 <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  Investment returns
+                  <div className="firecalc__section-title">Investment returns</div>
                 </Typography>
               </div>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
                     variant="outlined"
@@ -213,14 +221,13 @@ function App() {
                 </Grid>
               </Grid>
 
-              <Divider />
               <div>
                 <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  Age
+                  <div className="firecalc__section-title">Age</div>
                 </Typography>
               </div>
-              <Grid container>
-                <Grid item xs={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Age"
@@ -233,7 +240,7 @@ function App() {
                     })}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <TextField
                     variant="outlined"
                     label="Retirement Fund Age"
@@ -246,7 +253,7 @@ function App() {
                     })}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   {calculationType === 'retire_age' ? (
                     <TextField
                       variant="outlined"
@@ -268,11 +275,12 @@ function App() {
                   )}
                 </Grid>
               </Grid>
-              <Grid>
-                <Button variant="contained" color="primary" type="submit">
+              <Grid className="firecalc__button-container">
+                <Button className="firecalc__button" variant="contained" type="submit">
                   Calculate
                 </Button>
               </Grid>
+
               <Grid container direction="column">
                 {fire && (
                   <>
