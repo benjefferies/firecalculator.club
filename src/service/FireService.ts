@@ -102,7 +102,7 @@ function calculateCompoundInterestWithAnnualInvestment(
 }
 
 export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, data: FireData): Fire {
-  const isRetired = data.currentAge >= data.retirementFundAccessAge
+  const isRetired = data.currentAge >= data.retirementFundAccessAge;
   const hasRetirementFund = data.retirementFundTotal || data.retirementFundAnnualInvestments;
   const hasInvestmentFund = data.generalFundAnnualInvestments || data.generalFundTotal;
   if (hasRetirementFund && !hasInvestmentFund && targetFireAge < data.retirementFundAccessAge) {
@@ -129,8 +129,9 @@ export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, 
     data.currentAge,
     targetFireAge
   );
-  const yearsGeneralNeedsToLast = (hasRetirementFund && !isRetired ? data.retirementFundAccessAge : AVERAGE_LIFE_EXPECTANCY) - targetFireAge;
-  const yearsPensionNeedsToLast = AVERAGE_LIFE_EXPECTANCY - Math.max(targetFireAge, data.retirementFundAccessAge)
+  const yearsGeneralNeedsToLast =
+    (hasRetirementFund && !isRetired ? data.retirementFundAccessAge : AVERAGE_LIFE_EXPECTANCY) - targetFireAge;
+  const yearsPensionNeedsToLast = AVERAGE_LIFE_EXPECTANCY - Math.max(targetFireAge, data.retirementFundAccessAge);
   const generalDrawdownAmount = drawdown(generalAmountAtFireAge.total, data.drawdownRoi, yearsGeneralNeedsToLast);
   const retirementDrawdownAmount = drawdown(
     retirementAmountAfterFireAge.total,
