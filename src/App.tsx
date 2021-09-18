@@ -1,4 +1,6 @@
+import { Adsense } from '@ctrl/react-adsense';
 import {
+  Box,
   Button,
   createTheme,
   Divider,
@@ -9,20 +11,18 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  ThemeProvider,
-  Typography,
   Theme,
-  Box,
+  ThemeProvider,
+  Typography
 } from '@material-ui/core';
+import LocaleCurrency from 'locale-currency';
 import { useState } from 'react';
 import Chart from 'react-apexcharts';
+import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
 import './App.css';
-import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi, formatCurrency } from './service/FireService';
+import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from './service/FireService';
 import { Fire, FireData } from './types/types';
-import ReactGA from 'react-ga';
-import { Adsense } from '@ctrl/react-adsense';
-
 ReactGA.initialize('UA-207743771-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
@@ -36,6 +36,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `5px 0 0 ${theme.spacing(2)}px`,
   },
 }));
+
+const formatCurrency = (money: number) => {
+  return money.toLocaleString(navigator.language, {
+    style: 'currency',
+    currency: LocaleCurrency.getCurrency(navigator.language),
+  });
+};
 
 function calculateFire(data: FireData): Fire {
   if (data.calculationType === 'retire_age' && data.targetAge) {
@@ -279,7 +286,7 @@ function App() {
                       drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
                       <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}</strong> until{' '}
                       <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.pensionDrawdownAmount)}`}</strong>.
+                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>.
                     </Typography>
                     <Chart
                       options={{
@@ -315,11 +322,13 @@ function App() {
                           name: 'General Investments',
                         },
                         {
-                          data: Object.keys({ ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph }).map((k) => {
-                            const merged = { ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.pensionDrawdownGraph };
-                            const kNum = Number.parseInt(k);
-                            return [kNum, merged[kNum]];
-                          }),
+                          data: Object.keys({ ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.retirementDrawdownGraph }).map(
+                            (k) => {
+                              const merged = { ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.retirementDrawdownGraph };
+                              const kNum = Number.parseInt(k);
+                              return [kNum, merged[kNum]];
+                            }
+                          ),
                           name: 'Retirement Investments',
                         },
                       ]}

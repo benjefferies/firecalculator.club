@@ -1,12 +1,5 @@
-import LocaleCurrency from 'locale-currency';
-import { FireData, Fire, AVERAGE_LIFE_EXPECTANCY, Graph, InvestmentGrowth } from '../types/types';
-
-export const formatCurrency = (money: number) => {
-  return money.toLocaleString(navigator.language, {
-    style: 'currency',
-    currency: LocaleCurrency.getCurrency(navigator.language),
-  });
-};
+import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
+import { AVERAGE_LIFE_EXPECTANCY, Fire, FireData, Graph, InvestmentGrowth } from '../types/types';
 
 export function compoundInterest(principal: number, rate: number, time: number = 1, timesPerYear: number = 1) {
   const amount = principal * Math.pow(1 + (rate * 0.01) / timesPerYear, timesPerYear * time);
@@ -31,8 +24,10 @@ export function calculateFireAmountBasedOnDesiredRoi(desiredAnnualRoi: number, d
     (generalInvestmentAmountDrawdownGrowth() + retirementInvestmentAmountDrawdownGrowth() < desiredAnnualRoi &&
       data.currentAge > data.retirementFundAccessAge)
   ) {
-    generalInvestmentAmount += compoundInterest(generalInvestmentAmount, data.investingRoi) + data.generalFundAnnualInvestments;
-    retirementInvestmentAmount += compoundInterest(retirementInvestmentAmount, data.investingRoi) + data.retirementFundAnnualInvestments;
+    generalInvestmentAmount +=
+      compoundInterest(generalInvestmentAmount, data.investingRoi) + data.generalFundAnnualInvestments;
+    retirementInvestmentAmount +=
+      compoundInterest(retirementInvestmentAmount, data.investingRoi) + data.retirementFundAnnualInvestments;
     fireAge++;
   }
   let retirementFundAtFire = retirementInvestmentAmount;
@@ -44,9 +39,14 @@ export function calculateFireAmountBasedOnDesiredRoi(desiredAnnualRoi: number, d
   return {
     drawdown: {
       generalDrawdownAmount: desiredAnnualRoi,
-      generalDrawdownGraph: calculateDrawdownGraph(fireAge, generalInvestmentAmount, desiredAnnualRoi, data.drawdownRoi),
-      pensionDrawdownAmount: desiredAnnualRoi,
-      pensionDrawdownGraph: calculateDrawdownGraph(
+      generalDrawdownGraph: calculateDrawdownGraph(
+        fireAge,
+        generalInvestmentAmount,
+        desiredAnnualRoi,
+        data.drawdownRoi
+      ),
+      retirementDrawdownAmount: desiredAnnualRoi,
+      retirementDrawdownGraph: calculateDrawdownGraph(
         Math.max(data.currentAge, data.retirementFundAccessAge),
         retirementInvestmentAmount,
         desiredAnnualRoi,
@@ -85,19 +85,25 @@ function calculateCompoundInterestWithAnnualInvestment(
   return investmentGrowth;
 }
 
-export function calculateFireAmountBasedOnDesiredFireAge(desiredAge: number, data: FireData): Fire {
+export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, data: FireData): Fire {
+  const isRetired = data.currentAge >= data.retirementFundAccessAge
+  const hasRetirementFund = data.retirementFundTotal || data.retirementFundAnnualInvestments;
+  const hasInvestmentFund = data.generalFundAnnualInvestments || data.generalFundTotal;
+  if (hasRetirementFund && !hasInvestmentFund && targetFireAge < data.retirementFundAccessAge) {
+    throw new Error('Cannot FIRE before accessing pension without investment fund');
+  }
   let retirementAmountInvestingToDesiredFireAge = calculateCompoundInterestWithAnnualInvestment(
     data.retirementFundTotal,
     data.retirementFundAnnualInvestments,
     data.investingRoi,
     data.currentAge,
-    desiredAge
+    targetFireAge
   );
-  let retirementAmountAtRetirementAge = calculateCompoundInterestWithAnnualInvestment(
+  let retirementAmountAfterFireAge = calculateCompoundInterestWithAnnualInvestment(
     retirementAmountInvestingToDesiredFireAge.total,
     0,
     data.investingRoi,
-    desiredAge,
+    targetFireAge,
     data.retirementFundAccessAge
   );
   let generalAmountAtFireAge = calculateCompoundInterestWithAnnualInvestment(
@@ -105,35 +111,46 @@ export function calculateFireAmountBasedOnDesiredFireAge(desiredAge: number, dat
     data.generalFundAnnualInvestments,
     data.investingRoi,
     data.currentAge,
-    desiredAge
+    targetFireAge
   );
-  const hasRetirementFund = data.retirementFundAnnualInvestments && data.retirementFundTotal;
-  const yearsGeneralNeedsToLast = hasRetirementFund ? data.retirementFundAccessAge - desiredAge : AVERAGE_LIFE_EXPECTANCY - desiredAge;
+  const yearsGeneralNeedsToLast = (hasRetirementFund && !isRetired ? data.retirementFundAccessAge : AVERAGE_LIFE_EXPECTANCY) - targetFireAge;
+  const yearsPensionNeedsToLast = AVERAGE_LIFE_EXPECTANCY - Math.max(targetFireAge, data.retirementFundAccessAge)
   const generalDrawdownAmount = drawdown(generalAmountAtFireAge.total, data.drawdownRoi, yearsGeneralNeedsToLast);
-  const pensionDrawdownAmount = drawdown(
-    retirementAmountAtRetirementAge.total,
+  const retirementDrawdownAmount = drawdown(
+    retirementAmountAfterFireAge.total,
     data.drawdownRoi,
-    AVERAGE_LIFE_EXPECTANCY - Math.max(data.currentAge, data.retirementFundAccessAge)
+    yearsPensionNeedsToLast
   );
+  const generalDrawdownGraph = calculateDrawdownGraph(
+    targetFireAge,
+    generalAmountAtFireAge.total,
+    generalDrawdownAmount,
+    data.drawdownRoi
+  );
+  const retirementDrawdownGraph = calculateDrawdownGraph(
+    Math.max(targetFireAge, data.retirementFundAccessAge),
+    retirementAmountAfterFireAge.total,
+    retirementDrawdownAmount,
+    data.drawdownRoi
+  );
+  const retirementGrowthGraph = {
+    ...retirementAmountInvestingToDesiredFireAge.graph,
+    ...retirementAmountAfterFireAge.graph,
+  };
   const fire: Fire = {
     drawdown: {
       generalDrawdownAmount: generalDrawdownAmount,
-      generalDrawdownGraph: calculateDrawdownGraph(desiredAge, generalAmountAtFireAge.total, generalDrawdownAmount, data.drawdownRoi),
-      pensionDrawdownAmount: hasRetirementFund ? pensionDrawdownAmount : generalDrawdownAmount,
-      pensionDrawdownGraph: calculateDrawdownGraph(
-        data.retirementFundAccessAge,
-        retirementAmountAtRetirementAge.total,
-        hasRetirementFund ? pensionDrawdownAmount : generalDrawdownAmount,
-        data.drawdownRoi
-      ),
+      generalDrawdownGraph: generalDrawdownGraph,
+      retirementDrawdownAmount: retirementDrawdownAmount,
+      retirementDrawdownGraph,
     },
-    fireAge: desiredAge,
+    fireAge: targetFireAge,
     growth: {
-      retirementFundTotal: retirementAmountAtRetirementAge.total,
+      retirementFundTotal: retirementAmountAfterFireAge.total,
       retirementFundAtFire: retirementAmountInvestingToDesiredFireAge.total,
       generalFundAtFire: generalAmountAtFireAge.total,
       generalGrowthGraph: generalAmountAtFireAge.graph,
-      retirementGrowthGraph: { ...retirementAmountInvestingToDesiredFireAge.graph, ...retirementAmountAtRetirementAge.graph },
+      retirementGrowthGraph: retirementGrowthGraph,
     },
   };
   console.log(fire, 'calculateFireAmountBasedOnDesiredFireAge');

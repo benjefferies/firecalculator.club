@@ -12,8 +12,8 @@ export type InvestmentGrowth = {
 export type Drawdown = {
   generalDrawdownAmount: number;
   generalDrawdownGraph: Graph;
-  pensionDrawdownAmount: number;  
-  pensionDrawdownGraph: Graph;
+  retirementDrawdownAmount: number;  
+  retirementDrawdownGraph: Graph;
 }
 
 export type Growth = {
