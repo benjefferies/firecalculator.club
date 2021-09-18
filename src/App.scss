@@ -1,6 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Yantramanav:400,500,700,900);
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body {
-  background: rgb(0, 0, 0);
+  background: #181818;
   color: white;
 }
 .App {
@@ -45,13 +47,9 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-<<<<<<< HEAD
-    background: rgb(7, 7, 7);
-=======
-    background: rgb(0, 0, 0);
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
+    background: #181818;
     margin: 0;
-    padding: 60px 0 50px;
+    padding: 60px 0 30px;
   }
 
   &__highlighted {
@@ -64,16 +62,17 @@ body {
   }
 
   &__section-title {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: #fff;
     font-family: 'yantramanav';
     font-weight: 900;
-    margin: 0;
+    margin: auto;
     line-height: 1em;
     font-family: 'yantramanav';
     text-transform: uppercase;
     text-align: center;
-    padding: 5px;
+    padding: 20px;
+    text-decoration: underline#ef5a00;
   }
 
   &__radio-container {
@@ -81,23 +80,44 @@ body {
     padding: 10px;
     align-items: center;
   }
+
   &__radio-group {
     justify-content: center;
     align-items: center;
   }
 
   &__label {
+    margin: auto;
     span {
       text-align: center;
       font-size: 0.7rem;
+      color: #fff;
+      font-weight: 900;
+      margin: 0;
+      line-height: 1em;
+      font-family: 'yantramanav';
+      text-transform: uppercase;
+      text-align: center;
+      
     }
+  }
+
+  &__chart-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.2em;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
   }
 
   &__button-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 30px;
   }
 
   &__button {
@@ -123,7 +143,7 @@ body {
   }
 
   &-contained {
-    background: rgb(0, 0, 0) !important;
+    background: #181818 !important;
     border: 1px solid #ef5a00 !important;
   }
 }
@@ -147,15 +167,21 @@ body {
 
 .MuiFormControl-root.MuiTextField-root {
   border-radius: 3px;
-<<<<<<< HEAD
-  background: #111010;
-}
-=======
   background: #302d2d;
 }
 
 .apexcharts-tooltip-title {
-  background-color: #5f5f5f !important;
+  background-color: #404040 !important;
   font-weight: 900;
 }
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
+
+label {
+  margin: auto !important;
+}
+
+.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}

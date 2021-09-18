@@ -20,11 +20,7 @@ import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
 import './App.scss';
-<<<<<<< HEAD
-import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi, formatCurrency } from './service/FireService';
-=======
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from './service/FireService';
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
 import { Fire, FireData } from './types/types';
 ReactGA.initialize('UA-207743771-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -45,12 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `5px 0 0 ${theme.spacing(2)}px`,
     textAlign: 'center',
     padding: '5px',
-<<<<<<< HEAD
-=======
   },
   textInputText: {
     color: '#FFF',
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
   },
 }));
 
@@ -141,16 +134,12 @@ function App() {
               </Grid>
 
               <div>
-<<<<<<< HEAD
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-=======
                 <Typography
                   className={classes.dividerFullWidth}
                   color="textSecondary"
                   display="block"
                   variant="caption"
                 >
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
                   <div className="firecalc__section-title">Retirement Investments</div>
                 </Typography>
               </div>
@@ -187,16 +176,12 @@ function App() {
               </Grid>
 
               <div>
-<<<<<<< HEAD
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-=======
                 <Typography
                   className={classes.dividerFullWidth}
                   color="textSecondary"
                   display="block"
                   variant="caption"
                 >
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
                   <div className="firecalc__section-title">General Investments</div>
                 </Typography>
               </div>
@@ -232,16 +217,12 @@ function App() {
               </Grid>
 
               <div>
-<<<<<<< HEAD
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-=======
                 <Typography
                   className={classes.dividerFullWidth}
                   color="textSecondary"
                   display="block"
                   variant="caption"
                 >
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
                   <div className="firecalc__section-title">Investment returns</div>
                 </Typography>
               </div>
@@ -277,16 +258,12 @@ function App() {
               </Grid>
 
               <div>
-<<<<<<< HEAD
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-=======
                 <Typography
                   className={classes.dividerFullWidth}
                   color="textSecondary"
                   display="block"
                   variant="caption"
                 >
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
                   <div className="firecalc__section-title">Age</div>
                 </Typography>
               </div>
@@ -359,22 +336,9 @@ function App() {
               <Grid container direction="column">
                 {fire && (
                   <>
-<<<<<<< HEAD
-                    <Typography variant="body1">
-                      If you FIRE at
-                      <strong>{getValues('calculationType') === 'retire_age' ? getValues('targetAge') : fire.fireAge}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments. When you reach the
-                      retirement age of <strong>{getValues('retirementFundAccessAge')}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your pension. From your general investments can
-                      drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
-                      <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}</strong> until{' '}
-                      <strong>{getValues('retirementFundAccessAge')}</strong> and then continue to drawdown from both your investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.pensionDrawdownAmount)}`}</strong>.
-                    </Typography>
-=======
                     {fire.fireAge < getValues('retirementFundAccessAge') ? (
-                      <Typography variant="body1">
-                        If you FIRE at <strong>{fire.fireAge}</strong> you will have{' '}
+                      <div className="firecalc__chart-text">
+                        If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you will have{' '}
                         <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments.
                         When you reach the retirement age of{' '}
                         <strong>{Math.max(getValues('retirementFundAccessAge'), fire.fireAge)}</strong> you will have{' '}
@@ -387,18 +351,17 @@ function App() {
                         until <strong>{getValues('retirementFundAccessAge')}</strong> then you can drawdown from your
                         retirement investments{' '}
                         <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
-                      </Typography>
+                      </div>
                     ) : (
-                      <Typography variant="body1">
-                        If you FIRE at <strong>{fire.fireAge}</strong> you will have{' '}
+                      <div className="firecalc__chart-text">
+                        If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you will have{' '}
                         <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments and{' '}
                         <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement
                         investments. From your general investments can drawdown{' '}
                         <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement
                         investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
-                      </Typography>
+                      </div>
                     )}
->>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
                     <Chart
                       options={{
                         stroke: {
@@ -409,11 +372,11 @@ function App() {
                         },
                         legend: {
                           labels: {
-                              colors: '#FFF',
-                          }
+                            colors: '#FFF',
+                          },
                         },
                         tooltip: {
-                          fillSeriesColor: true
+                          fillSeriesColor: true,
                         },
                         yaxis: {
                           labels: {
