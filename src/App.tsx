@@ -370,15 +370,31 @@ function App() {
                         markers: {
                           size: 2,
                         },
+                        legend: {
+                          labels: {
+                              colors: '#FFF',
+                          }
+                        },
+                        tooltip: {
+                          fillSeriesColor: true
+                        },
                         yaxis: {
                           labels: {
                             formatter: (value: number) => {
                               return formatCurrency(value);
                             },
+                            style: {
+                              colors: '#FFF',
+                            },
                           },
                         },
                         xaxis: {
                           type: 'numeric',
+                          labels: {
+                            style: {
+                              colors: '#FFF',
+                            },
+                          },
                           tickAmount:
                             window.innerWidth < 800
                               ? 10
