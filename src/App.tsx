@@ -2,9 +2,7 @@ import { Adsense } from '@ctrl/react-adsense';
 import {
   Box,
   Button,
-  createTheme,
-  Divider,
-  FormControlLabel,
+  createTheme, FormControlLabel,
   Grid,
   makeStyles,
   NoSsr,
@@ -284,7 +282,6 @@ function App() {
               <Grid container direction="column">
                 {fire && (
                   <>
-                    <Divider />
                     {fire.fireAge < getValues('retirementFundAccessAge') ? <Typography variant="body1">
                         If you FIRE at{' '}
                         <strong>{fire.fireAge}</strong> you will have{' '}
