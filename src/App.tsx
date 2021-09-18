@@ -339,11 +339,11 @@ function App() {
                     {fire.fireAge < getValues('retirementFundAccessAge') ? (
                       <div className="firecalc__chart-text">
                         If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you will have{' '}
-                        <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments.
+                        <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments.<br />
                         When you reach the retirement age of{' '}
                         <strong>{Math.max(getValues('retirementFundAccessAge'), fire.fireAge)}</strong> you will have{' '}
                         <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement
-                        investments. From your general investments can drawdown{' '}
+                        investments.<br /> From your general investments can drawdown{' '}
                         <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
                         <strong>
                           {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
@@ -357,7 +357,7 @@ function App() {
                         If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you will have{' '}
                         <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments and{' '}
                         <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement
-                        investments. From your general investments can drawdown{' '}
+                        investments.<br />From your general investments can drawdown{' '}
                         <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement
                         investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
                       </div>
