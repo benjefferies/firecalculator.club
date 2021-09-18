@@ -1,0 +1,152 @@
+@import url(https://fonts.googleapis.com/css?family=Yantramanav:400,500,700,900);
+body {
+  background: rgb(0, 0, 0);
+  color: white;
+}
+.App {
+  text-align: center;
+}
+
+.firecalc {
+  &__title {
+    font-size: 2.5rem;
+    color: #fff;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1em;
+    font-family: 'yantramanav';
+    text-transform: uppercase;
+    text-align: center;
+
+    &::after {
+      content: '';
+      width: 10%;
+      position: relative;
+      border-bottom: 1px solid #ef5a00;
+      display: block;
+      text-align: center;
+      margin: auto;
+      margin-top: 25px;
+    }
+  }
+
+  &__subtitle {
+    color: #111;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 4vw;
+    font-weight: 300;
+    line-height: 32px;
+    margin: 0 0 72px;
+    text-align: center;
+  }
+
+  &__title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgb(0, 0, 0);
+    margin: 0;
+    padding: 60px 0 50px;
+  }
+
+  &__highlighted {
+    color: #ef5a00;
+  }
+
+  &__label {
+    padding: 10px;
+    font-size: 0.5rem;
+  }
+
+  &__section-title {
+    font-size: 1.2rem;
+    color: #fff;
+    font-family: 'yantramanav';
+    font-weight: 900;
+    margin: 0;
+    line-height: 1em;
+    font-family: 'yantramanav';
+    text-transform: uppercase;
+    text-align: center;
+    padding: 5px;
+  }
+
+  &__radio-container {
+    justify-content: center;
+    padding: 10px;
+    align-items: center;
+  }
+  &__radio-group {
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__label {
+    span {
+      text-align: center;
+      font-size: 0.7rem;
+    }
+  }
+
+  &__button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+
+  &__button {
+    color: pink;
+    font-size: 20px;
+    font-weight: 900;
+    background-color: #111;
+  }
+}
+
+.MuiButton {
+  &-label {
+    padding: 2px;
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1em;
+    font-family: 'yantramanav';
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+  }
+
+  &-contained {
+    background: rgb(0, 0, 0) !important;
+    border: 1px solid #ef5a00 !important;
+  }
+}
+
+.MuiFormControl {
+  &-root {
+    label.MuiFormLabel-root {
+      font-size: 0.8rem !important;
+      padding: 2px;
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 900;
+      margin: 0;
+      line-height: 1em;
+      font-family: 'yantramanav';
+      text-transform: uppercase;
+      text-align: center;
+    }
+  }
+}
+
+.MuiFormControl-root.MuiTextField-root {
+  border-radius: 3px;
+  background: #111010;
+}
+
+.apexcharts-tooltip-title {
+  background-color: #5f5f5f !important;
+  font-weight: 900;
+}

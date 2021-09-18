@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   createTheme,
-  Divider,
   FormControlLabel,
   Grid,
   makeStyles,
@@ -13,14 +12,14 @@ import {
   TextField,
   Theme,
   ThemeProvider,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import LocaleCurrency from 'locale-currency';
 import { useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
-import './App.css';
+import './App.scss';
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from './service/FireService';
 import { Fire, FireData } from './types/types';
 ReactGA.initialize('UA-207743771-1');
@@ -28,12 +27,23 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 
 const theme = createTheme({
   spacing: 8,
+  palette: {
+    primary: {
+      main: '#ef5a00',
+    },
+  },
 });
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: { minHeight: '100vh' },
   inner: { minHeight: '100vh' },
   dividerFullWidth: {
     margin: `5px 0 0 ${theme.spacing(2)}px`,
+    textAlign: 'center',
+    padding: '5px',
+  },
+  textInputText: {
+    color: '#FFF',
   },
 }));
 
@@ -83,24 +93,39 @@ function App() {
   return (
     <div className={classes.root}>
       <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }} className={classes.inner}>
-        <Adsense client="ca-pub-1383291322337575" slot="7259870550" style={{ display: 'block' }} layout="in-article" format="fluid" />
+        <Adsense
+          client="ca-pub-1383291322337575"
+          slot="7259870550"
+          style={{ display: 'block' }}
+          layout="in-article"
+          format="fluid"
+        />
         <NoSsr>
           <ThemeProvider theme={theme}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography align="center" variant="h2" component="h1">
-                FIRE Calculator
-              </Typography>
-              <Grid container>
+              <div className="firecalc__title-container">
+                <h1 className="firecalc__title">
+                  How <span className="firecalc__highlighted">much</span> can you spend when you hit
+                  <span className="firecalc__highlighted"> Fire?</span>
+                </h1>
+              </div>
+              <Grid className="firecalc__radio-container" container spacing={2}>
                 <Controller
                   rules={{ required: true }}
                   name="calculationType"
                   render={({ field }) => (
-                    <RadioGroup row {...register('calculationType')} {...field}>
-                      <FormControlLabel value={'retire_age'} control={<Radio />} label="How much can I drawdown when I FIRE?" />
+                    <RadioGroup className="firecalc__radio-group" row {...register('calculationType')} {...field}>
                       <FormControlLabel
+                        className="firecalc__label"
+                        value={'retire_age'}
+                        control={<Radio />}
+                        label="How much can I drawdown when I FIRE?"
+                      />
+                      <FormControlLabel
+                        className="firecalc__label"
                         value={'retire_roi_amount'}
                         control={<Radio />}
-                        label="What age will I be when I reach my target FIRE age"
+                        label="Age will I be when I reach target FIRE age?"
                       />
                     </RadioGroup>
                   )}
@@ -108,15 +133,21 @@ function App() {
                 />
               </Grid>
 
-              <Divider component="div" />
               <div>
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  Retirement Investments
+                <Typography
+                  className={classes.dividerFullWidth}
+                  color="textSecondary"
+                  display="block"
+                  variant="caption"
+                >
+                  <div className="firecalc__section-title">Retirement Investments</div>
                 </Typography>
               </div>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
+                    color="secondary"
                     variant="outlined"
                     label="Retirement Fund"
                     type="number"
@@ -130,6 +161,7 @@ function App() {
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Annual Contribution"
                     type="number"
@@ -143,15 +175,20 @@ function App() {
                 </Grid>
               </Grid>
 
-              <Divider component="div" />
               <div>
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  General Investments
+                <Typography
+                  className={classes.dividerFullWidth}
+                  color="textSecondary"
+                  display="block"
+                  variant="caption"
+                >
+                  <div className="firecalc__section-title">General Investments</div>
                 </Typography>
               </div>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Investment Fund"
                     type="number"
@@ -165,6 +202,7 @@ function App() {
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Annual Contribution"
                     type="number"
@@ -178,15 +216,20 @@ function App() {
                 </Grid>
               </Grid>
 
-              <Divider component="div" />
               <div>
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  Investment returns
+                <Typography
+                  className={classes.dividerFullWidth}
+                  color="textSecondary"
+                  display="block"
+                  variant="caption"
+                >
+                  <div className="firecalc__section-title">Investment returns</div>
                 </Typography>
               </div>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Investing Return %"
                     type="number"
@@ -200,6 +243,7 @@ function App() {
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Drawdown Return %"
                     type="number"
@@ -213,15 +257,20 @@ function App() {
                 </Grid>
               </Grid>
 
-              <Divider />
               <div>
-                <Typography className={classes.dividerFullWidth} color="textSecondary" display="block" variant="caption">
-                  Age
+                <Typography
+                  className={classes.dividerFullWidth}
+                  color="textSecondary"
+                  display="block"
+                  variant="caption"
+                >
+                  <div className="firecalc__section-title">Age</div>
                 </Typography>
               </div>
-              <Grid container>
-                <Grid item xs={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Age"
                     type="number"
@@ -233,8 +282,9 @@ function App() {
                     })}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <TextField
+                    inputProps={{ className: classes.textInputText }}
                     variant="outlined"
                     label="Retirement Fund Age"
                     type="number"
@@ -246,56 +296,72 @@ function App() {
                     })}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   {calculationType === 'retire_age' ? (
                     <TextField
+                      inputProps={{ className: classes.textInputText }}
                       variant="outlined"
                       label="Target FIRE Age"
                       type="number"
                       error={errors.targetAge !== undefined}
                       helperText={errorHelperText(errors.targetAge, 'Age must be the same or more than current age')}
-                      {...register('targetAge', { valueAsNumber: true, required: calculationType === 'retire_age', validate: (targetAge) => (targetAge || 0) >= currentAge })}
+                      {...register('targetAge', {
+                        valueAsNumber: true,
+                        required: calculationType === 'retire_age',
+                        validate: (targetAge) => (targetAge || 0) >= currentAge,
+                      })}
                     />
                   ) : (
                     <TextField
+                      inputProps={{ className: classes.textInputText }}
                       variant="outlined"
                       label="Target Drawdown"
                       type="number"
                       error={errors.targetAnnualRoi !== undefined}
                       helperText={errorHelperText(errors.targetAnnualRoi, 'This field is required')}
-                      {...register('targetAnnualRoi', { valueAsNumber: true, required: calculationType === 'retire_roi_amount' })}
+                      {...register('targetAnnualRoi', {
+                        valueAsNumber: true,
+                        required: calculationType === 'retire_roi_amount',
+                      })}
                     />
                   )}
                 </Grid>
               </Grid>
-              <Grid>
-                <Button variant="contained" color="primary" type="submit">
+              <Grid className="firecalc__button-container">
+                <Button className="firecalc__button" variant="contained" type="submit">
                   Calculate
                 </Button>
               </Grid>
+
               <Grid container direction="column">
                 {fire && (
                   <>
-                    <Divider />
-                    {fire.fireAge < getValues('retirementFundAccessAge') ? <Typography variant="body1">
-                        If you FIRE at{' '}
-                        <strong>{fire.fireAge}</strong> you will have{' '}
-                        <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments. When you reach the
-                        retirement age of <strong>{Math.max(getValues('retirementFundAccessAge'), fire.fireAge)}</strong> you will have{' '}
-                        <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments. From your general investments can
-                        drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
-                        <strong>{getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}</strong> until{' '}
-                        <strong>{getValues('retirementFundAccessAge')}</strong> then you can drawdown from your retirement investments{' '}
+                    {fire.fireAge < getValues('retirementFundAccessAge') ? (
+                      <Typography variant="body1">
+                        If you FIRE at <strong>{fire.fireAge}</strong> you will have{' '}
+                        <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments.
+                        When you reach the retirement age of{' '}
+                        <strong>{Math.max(getValues('retirementFundAccessAge'), fire.fireAge)}</strong> you will have{' '}
+                        <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement
+                        investments. From your general investments can drawdown{' '}
+                        <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
+                        <strong>
+                          {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
+                        </strong>{' '}
+                        until <strong>{getValues('retirementFundAccessAge')}</strong> then you can drawdown from your
+                        retirement investments{' '}
                         <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
-                    </Typography> :
-                    <Typography variant="body1">
-                      If you FIRE at{' '}
-                      <strong>{fire.fireAge}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments and{' '}
-                      <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments. From your general investments can
-                      drawdown <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
-                  </Typography>}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body1">
+                        If you FIRE at <strong>{fire.fireAge}</strong> you will have{' '}
+                        <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general investments and{' '}
+                        <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement
+                        investments. From your general investments can drawdown{' '}
+                        <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement
+                        investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
+                      </Typography>
+                    )}
                     <Chart
                       options={{
                         stroke: {
@@ -304,25 +370,50 @@ function App() {
                         markers: {
                           size: 2,
                         },
+                        legend: {
+                          labels: {
+                              colors: '#FFF',
+                          }
+                        },
+                        tooltip: {
+                          fillSeriesColor: true
+                        },
                         yaxis: {
                           labels: {
                             formatter: (value: number) => {
                               return formatCurrency(value);
                             },
+                            style: {
+                              colors: '#FFF',
+                            },
                           },
                         },
                         xaxis: {
                           type: 'numeric',
+                          labels: {
+                            style: {
+                              colors: '#FFF',
+                            },
+                          },
                           tickAmount:
                             window.innerWidth < 800
                               ? 10
-                              : Object.keys({ ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph }).length,
+                              : Object.keys({
+                                  ...fire.growth?.generalGrowthGraph,
+                                  ...fire.drawdown.generalDrawdownGraph,
+                                }).length,
                         },
                       }}
                       series={[
                         {
-                          data: Object.keys({ ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph }).map((k) => {
-                            const merged = { ...fire.growth?.generalGrowthGraph, ...fire.drawdown.generalDrawdownGraph };
+                          data: Object.keys({
+                            ...fire.growth?.generalGrowthGraph,
+                            ...fire.drawdown.generalDrawdownGraph,
+                          }).map((k) => {
+                            const merged = {
+                              ...fire.growth?.generalGrowthGraph,
+                              ...fire.drawdown.generalDrawdownGraph,
+                            };
                             const kNum = Number.parseInt(k);
                             const formattedAmount = merged[kNum].toFixed(2);
                             return [kNum, formattedAmount];
@@ -330,13 +421,17 @@ function App() {
                           name: 'General Investments',
                         },
                         {
-                          data: Object.keys({ ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.retirementDrawdownGraph }).map(
-                            (k) => {
-                              const merged = { ...fire.growth?.retirementGrowthGraph, ...fire.drawdown.retirementDrawdownGraph };
-                              const kNum = Number.parseInt(k);
-                              return [kNum, merged[kNum]];
-                            }
-                          ),
+                          data: Object.keys({
+                            ...fire.growth?.retirementGrowthGraph,
+                            ...fire.drawdown.retirementDrawdownGraph,
+                          }).map((k) => {
+                            const merged = {
+                              ...fire.growth?.retirementGrowthGraph,
+                              ...fire.drawdown.retirementDrawdownGraph,
+                            };
+                            const kNum = Number.parseInt(k);
+                            return [kNum, merged[kNum]];
+                          }),
                           name: 'Retirement Investments',
                         },
                       ]}
