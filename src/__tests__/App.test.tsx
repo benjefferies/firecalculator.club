@@ -1,10 +1,21 @@
 // import React from 'react';
 // import { render, screen } from '@testing-library/react';
-// import App from './App';
+// import App from '../App';
 
-// // test('renders learn react link', () => {
-// //   render(<App />);
-// //   const selects = screen.getByTestId('calculationType')
-// //   expect(selects).toBeInTheDocument();
-// // });
+import { expect } from "chai";
 
+// test('renders with correct currency', () => {
+//   global.navigator = {
+//     language: 'en-GB',
+//   } as Navigator;
+//   render(<App />);
+//   const selects = screen.getByTestId('calculationType');
+//   expect(selects).toBeInTheDocument();
+// });
+
+
+
+test('renders with correct currency', () => {
+    expect(true).to.be.true
+  });
+  

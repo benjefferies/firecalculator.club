@@ -45,7 +45,11 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+<<<<<<< HEAD
     background: rgb(7, 7, 7);
+=======
+    background: rgb(0, 0, 0);
+>>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
     margin: 0;
     padding: 60px 0 50px;
   }
@@ -143,5 +147,15 @@ body {
 
 .MuiFormControl-root.MuiTextField-root {
   border-radius: 3px;
+<<<<<<< HEAD
   background: #111010;
 }
+=======
+  background: #302d2d;
+}
+
+.apexcharts-tooltip-title {
+  background-color: #5f5f5f !important;
+  font-weight: 900;
+}
+>>>>>>> 6a1ee20a1f7c595fa35a9ed31f90fe9c947fd6e7
