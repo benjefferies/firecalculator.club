@@ -2,8 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
-  background: #181818;
-  color: white;
+  // background: #181818;
+  // color: white;
 }
 .App {
   text-align: center;
@@ -12,7 +12,7 @@ body {
 .firecalc {
   &__title {
     font-size: 2.5rem;
-    color: #fff;
+    // color: #fff;
     font-weight: 900;
     margin: 0;
     line-height: 1em;
@@ -33,7 +33,7 @@ body {
   }
 
   &__subtitle {
-    color: #111;
+    // color: #111;
     font-family: 'Open Sans', sans-serif;
     font-size: 4vw;
     font-weight: 300;
@@ -47,7 +47,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: #181818;
+    // background: #181818;
     margin: 0;
     padding: 60px 0 30px;
   }
@@ -63,7 +63,7 @@ body {
 
   &__section-title {
     font-size: 1.3rem;
-    color: #fff;
+    // color: #fff;
     font-family: 'yantramanav';
     font-weight: 900;
     margin: auto;
@@ -91,7 +91,7 @@ body {
     span {
       text-align: center;
       font-size: 0.7rem;
-      color: #fff;
+      // color: #fff;
       font-weight: 900;
       margin: 0;
       line-height: 1em;
@@ -105,7 +105,7 @@ body {
   &__chart-text {
     text-align: center;
     font-size: 0.9rem;
-    color: #fff;
+    // color: #fff;
     font-weight: 400;
     margin: 0;
     line-height: 1.2em;
@@ -121,10 +121,10 @@ body {
   }
 
   &__button {
-    color: pink;
+    // color: pink;
     font-size: 20px;
     font-weight: 900;
-    background-color: #111;
+    // background-color: #111;
   }
 }
 
@@ -132,18 +132,18 @@ body {
   &-label {
     padding: 2px;
     font-size: 1.2rem;
-    color: #fff;
+    // color: #fff;
     font-weight: 900;
     margin: 0;
     line-height: 1em;
     font-family: 'yantramanav';
     text-transform: uppercase;
     text-align: center;
-    color: #fff;
+    // color: #fff;
   }
 
   &-contained {
-    background: #181818 !important;
+    // background: #181818 !important;
     border: 1px solid #ef5a00 !important;
   }
 }
@@ -154,7 +154,7 @@ body {
       font-size: 0.8rem !important;
       padding: 2px;
       font-size: 1.2rem;
-      color: #fff;
+      // color: #fff;
       font-weight: 900;
       margin: 0;
       line-height: 1em;
@@ -167,11 +167,11 @@ body {
 
 .MuiFormControl-root.MuiTextField-root {
   border-radius: 3px;
-  background: #302d2d;
+  // background: #302d2d;
 }
 
 .apexcharts-tooltip-title {
-  background-color: #404040 !important;
+  background-color: #808080 !important;
   font-weight: 900;
 }
 
