@@ -21,10 +21,10 @@ import { useMemo, useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
-import './App.scss';
-import { formatCurrency, getCurrency } from './service/CurrencyService';
-import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from './service/FireService';
-import { Fire, FireData } from './types/types';
+import './Calculator.scss';
+import { formatCurrency, getCurrency } from '../service/CurrencyService';
+import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from '../service/FireService';
+import { Fire, FireData } from '../types/types';
 
 ReactGA.initialize('UA-207743771-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -53,7 +53,7 @@ function errorHelperText(errorField: any, text: string) {
   return errorField !== undefined ? text : '';
 }
 
-function App() {
+function Calculator() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = useMemo(
     () =>
@@ -303,6 +303,7 @@ function App() {
                       {...register('retirementFundAccessAge', {
                         required: true,
                         valueAsNumber: true,
+                        value: 57
                       })}
                     />
                   </Grid>
@@ -464,4 +465,4 @@ function App() {
   );
 }
 
-export default App;
+export default Calculator;
