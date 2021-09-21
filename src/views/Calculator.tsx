@@ -50,10 +50,6 @@ function calculateFire(data: FireData): Fire {
   }
 }
 
-function errorHelperText(errorField: any, text: string) {
-  return errorField !== undefined ? text : '';
-}
-
 function Calculator() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = useMemo(
@@ -180,10 +176,14 @@ function Calculator() {
                       {...currencyTextFieldProps}
                       label="Retirement Fund"
                       error={errors.retirementFundTotal !== undefined}
-                      helperText={errorHelperText(errors.retirementFundTotal, 'This field is required')}
+                      helperText={errors.retirementFundTotal?.message}
                       {...register('retirementFundTotal', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -193,10 +193,14 @@ function Calculator() {
                       {...currencyTextFieldProps}
                       label="Annual Contribution"
                       error={errors.retirementFundAnnualInvestments !== undefined}
-                      helperText={errorHelperText(errors.retirementFundAnnualInvestments, 'This field is required')}
+                      helperText={errors.retirementFundAnnualInvestments?.message}
                       {...register('retirementFundAnnualInvestments', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -219,10 +223,14 @@ function Calculator() {
                       {...currencyTextFieldProps}
                       label="Investment Fund"
                       error={errors.generalFundTotal !== undefined}
-                      helperText={errorHelperText(errors.generalFundTotal, 'This field is required')}
+                      helperText={errors.generalFundTotal?.message}
                       {...register('generalFundTotal', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -232,10 +240,14 @@ function Calculator() {
                       {...currencyTextFieldProps}
                       label="Annual Contribution"
                       error={errors.generalFundAnnualInvestments !== undefined}
-                      helperText={errorHelperText(errors.generalFundAnnualInvestments, 'This field is required')}
+                      helperText={errors.generalFundAnnualInvestments?.message}
                       {...register('generalFundAnnualInvestments', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -258,10 +270,14 @@ function Calculator() {
                       {...percentageTextFieldProps}
                       label="Investing Return %"
                       error={errors.investingRoi !== undefined}
-                      helperText={errorHelperText(errors.investingRoi, 'This field is required')}
+                      helperText={errors.investingRoi?.message}
                       {...register('investingRoi', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -271,10 +287,14 @@ function Calculator() {
                       {...percentageTextFieldProps}
                       label="Drawdown Return %"
                       error={errors.drawdownRoi !== undefined}
-                      helperText={errorHelperText(errors.drawdownRoi, 'This field is required')}
+                      helperText={errors.drawdownRoi?.message}
                       {...register('drawdownRoi', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -297,10 +317,14 @@ function Calculator() {
                       {...ageTextFieldProps}
                       label="Age"
                       error={errors.currentAge !== undefined}
-                      helperText={errorHelperText(errors.currentAge, 'This field is required')}
+                      helperText={errors.currentAge?.message}
                       {...register('currentAge', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -310,11 +334,15 @@ function Calculator() {
                       {...ageTextFieldProps}
                       label="Retirement Fund Age"
                       error={errors.retirementFundAccessAge !== undefined}
-                      helperText={errorHelperText(errors.retirementFundAccessAge, 'This field is required')}
+                      helperText={errors.retirementFundAccessAge?.message}
                       {...register('retirementFundAccessAge', {
-                        required: true,
+                        required: 'This field is required',
                         valueAsNumber: true,
                         value: 57,
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
                       })}
                     />
                   </Grid>
@@ -325,11 +353,16 @@ function Calculator() {
                         {...ageTextFieldProps}
                         label="Target FIRE Age"
                         error={errors.targetAge !== undefined}
-                        helperText={errorHelperText(errors.targetAge, 'Age must be the same or more than current age')}
+                        helperText={errors.targetAge?.message}
                         {...register('targetAge', {
                           valueAsNumber: true,
-                          required: calculationType === 'retire_age',
-                          validate: (targetAge) => (targetAge || 0) >= currentAge,
+                          required: calculationType === 'retire_age' ? 'This field is required' : false,
+                          validate: (targetAge) =>
+                            (targetAge || 0) >= currentAge ? true : 'Must be the same or more than current age',
+                          min: {
+                            value: 0,
+                            message: "Can't be less than 0",
+                          },
                         })}
                       />
                     ) : (
@@ -338,10 +371,14 @@ function Calculator() {
                         {...currencyTextFieldProps}
                         label="Target Drawdown"
                         error={errors.targetAnnualRoi !== undefined}
-                        helperText={errorHelperText(errors.targetAnnualRoi, 'This field is required')}
+                        helperText={errors.targetAnnualRoi?.message}
                         {...register('targetAnnualRoi', {
                           valueAsNumber: true,
                           required: calculationType === 'retire_roi_amount',
+                          min: {
+                            value: 0,
+                            message: "Can't be less than 0",
+                          },
                         })}
                       />
                     )}
