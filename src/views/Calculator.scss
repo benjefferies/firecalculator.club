@@ -32,6 +32,11 @@ body {
     }
   }
 
+  &__form-container {
+    max-width: 600px;
+    margin: auto;
+  }
+
   &__subtitle {
     // color: #111;
     font-family: 'Open Sans', sans-serif;

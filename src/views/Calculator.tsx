@@ -126,7 +126,7 @@ function Calculator() {
               format="fluid"
             />
             <NoSsr>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form className="firecalc__form-container" onSubmit={handleSubmit(onSubmit)}>
                 <div className="firecalc__title-container">
                   <h1 className="firecalc__title">
                     How <span className="firecalc__highlighted">much</span> can you spend when you hit
