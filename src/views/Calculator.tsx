@@ -8,14 +8,15 @@ import {
   Grid,
   InputAdornment,
   makeStyles,
-  NoSsr, Radio,
+  NoSsr,
+  Radio,
   RadioGroup,
   TextField,
   TextFieldProps,
   Theme,
   ThemeProvider,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from '@material-ui/core';
 import { useMemo, useState } from 'react';
 import Chart from 'react-apexcharts';
@@ -100,18 +101,18 @@ function Calculator() {
 
   const currencyTextFieldProps = {
     ...commonProps,
-    inputProps: {
+    InputProps: {
       startAdornment: <InputAdornment position="start">{getCurrency()}</InputAdornment>,
     },
   } as TextFieldProps;
 
   const ageTextFieldProps = {
-    ...commonProps
+    ...commonProps,
   } as TextFieldProps;
 
   const percentageTextFieldProps = {
     ...commonProps,
-    inputProps: {
+    InputProps: {
       startAdornment: <InputAdornment position="start">%</InputAdornment>,
     },
   } as TextFieldProps;
@@ -147,12 +148,14 @@ function Calculator() {
                           value={'retire_age'}
                           control={<Radio />}
                           label="How much can I drawdown when I FIRE?"
+                          aria-label="How much can I drawdown when I FIRE?"
                         />
                         <FormControlLabel
                           className="firecalc__label"
                           value={'retire_roi_amount'}
                           control={<Radio />}
                           label="Age will I be when I reach target FIRE age?"
+                          aria-label="Age will I be when I reach target FIRE age?"
                         />
                       </RadioGroup>
                     )}
@@ -173,6 +176,7 @@ function Calculator() {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Retirement Fund"
                       {...currencyTextFieldProps}
                       label="Retirement Fund"
                       error={errors.retirementFundTotal !== undefined}
@@ -185,6 +189,7 @@ function Calculator() {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Retirement Fund Annual Contribution"
                       {...currencyTextFieldProps}
                       label="Annual Contribution"
                       error={errors.retirementFundAnnualInvestments !== undefined}
@@ -210,6 +215,7 @@ function Calculator() {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Investment Fund"
                       {...currencyTextFieldProps}
                       label="Investment Fund"
                       error={errors.generalFundTotal !== undefined}
@@ -222,6 +228,7 @@ function Calculator() {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Annual Contribution"
                       {...currencyTextFieldProps}
                       label="Annual Contribution"
                       error={errors.generalFundAnnualInvestments !== undefined}
@@ -247,6 +254,7 @@ function Calculator() {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Investing Return %"
                       {...percentageTextFieldProps}
                       label="Investing Return %"
                       error={errors.investingRoi !== undefined}
@@ -259,6 +267,7 @@ function Calculator() {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Drawdown Return %"
                       {...percentageTextFieldProps}
                       label="Drawdown Return %"
                       error={errors.drawdownRoi !== undefined}
@@ -284,6 +293,7 @@ function Calculator() {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Age"
                       {...ageTextFieldProps}
                       label="Age"
                       error={errors.currentAge !== undefined}
@@ -296,6 +306,7 @@ function Calculator() {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                      aria-label="Retirement Fund Age"
                       {...ageTextFieldProps}
                       label="Retirement Fund Age"
                       error={errors.retirementFundAccessAge !== undefined}
@@ -303,13 +314,14 @@ function Calculator() {
                       {...register('retirementFundAccessAge', {
                         required: true,
                         valueAsNumber: true,
-                        value: 57
+                        value: 57,
                       })}
                     />
                   </Grid>
                   <Grid item xs={6}>
                     {calculationType === 'retire_age' ? (
                       <TextField
+                        aria-label="Target FIRE Age"
                         {...ageTextFieldProps}
                         label="Target FIRE Age"
                         error={errors.targetAge !== undefined}
@@ -322,6 +334,7 @@ function Calculator() {
                       />
                     ) : (
                       <TextField
+                        aria-label="Target Drawdown"
                         {...currencyTextFieldProps}
                         label="Target Drawdown"
                         error={errors.targetAnnualRoi !== undefined}
