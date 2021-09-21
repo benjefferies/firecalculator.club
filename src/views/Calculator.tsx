@@ -27,9 +27,6 @@ import { formatCurrency, getCurrency } from '../service/CurrencyService';
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from '../service/FireService';
 import { Fire, FireData } from '../types/types';
 
-ReactGA.initialize('UA-207743771-1');
-ReactGA.pageview(window.location.pathname + window.location.search);
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: { minHeight: '100vh' },
   inner: { minHeight: '100vh' },

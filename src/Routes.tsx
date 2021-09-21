@@ -5,8 +5,12 @@ import Pension from './views/Pension';
 import CapitalGains from './views/CapitalGains';
 import ReactGA from 'react-ga';
 
-ReactGA.initialize('UA-207743771-1');
-ReactGA.pageview(window.location.pathname + window.location.search);
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  console.log('Running development');
+} else {
+  ReactGA.initialize('UA-207743771-1');
+  ReactGA.pageview(window.location.pathname + window.location.search);
+}
 
 export const routePaths = {
   root: '/calculator',
