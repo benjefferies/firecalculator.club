@@ -85,7 +85,13 @@ function Calculator() {
     const fire = calculateFire(data);
     setFire(fire);
   };
-  const [calculationType, currentAge] = watch(['calculationType', 'currentAge']);
+  const [calculationType, currentAge, generalFundAnnualInvestments, generalFundTotal, retirementFundAccessAge] = watch([
+    'calculationType',
+    'currentAge',
+    'generalFundAnnualInvestments',
+    'generalFundTotal',
+    'retirementFundAccessAge',
+  ]);
 
   const commonProps = {
     variant: 'outlined',
@@ -354,8 +360,19 @@ function Calculator() {
                         {...register('targetAge', {
                           valueAsNumber: true,
                           required: calculationType === 'retire_age' ? 'This field is required' : false,
-                          validate: (targetAge) =>
-                            (targetAge || 0) >= currentAge ? true : 'Must be the same or more than current age',
+                          validate: (targetAge) => {
+                            if ((targetAge || 0) <= currentAge) {
+                              return 'Must be the same or more than current age';
+                            }
+                            if (
+                              generalFundAnnualInvestments === 0 &&
+                              generalFundTotal === 0 &&
+                              currentAge < retirementFundAccessAge
+                            ) {
+                              return `Must have investment fund to retire before ${retirementFundAccessAge}`;
+                            }
+                            return true;
+                          },
                           min: {
                             value: 0,
                             message: "Can't be less than 0",
