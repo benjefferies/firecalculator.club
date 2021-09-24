@@ -1,5 +1,6 @@
 import { Adsense } from '@ctrl/react-adsense';
 import {
+  AppBar,
   Box,
   Button,
   createTheme,
@@ -15,6 +16,7 @@ import {
   TextFieldProps,
   Theme,
   ThemeProvider,
+  Toolbar,
   Typography,
   useMediaQuery,
 } from '@material-ui/core';
@@ -22,10 +24,10 @@ import { useMemo, useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
-import './Calculator.scss';
 import { formatCurrency, getCurrency } from '../service/CurrencyService';
 import { calculateFireAmountBasedOnDesiredFireAge, calculateFireAmountBasedOnDesiredRoi } from '../service/FireService';
 import { Fire, FireData } from '../types/types';
+import './Calculator.scss';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: { minHeight: '100vh' },
@@ -120,6 +122,13 @@ function Calculator() {
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <div className={classes.root}>
+          <AppBar position="static">
+            <Toolbar>
+              <Button href="/article" color="inherit">
+                Articles
+              </Button>
+            </Toolbar>
+          </AppBar>
           <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }}>
             <Adsense
               client="ca-pub-1383291322337575"

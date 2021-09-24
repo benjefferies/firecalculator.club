@@ -1,12 +1,15 @@
 import { Adsense } from '@ctrl/react-adsense';
 import {
+  AppBar,
   Box,
+  Button,
   createTheme,
   CssBaseline,
   makeStyles,
   NoSsr,
   Theme,
   ThemeProvider,
+  Toolbar,
   Typography,
   useMediaQuery,
 } from '@material-ui/core';
@@ -47,6 +50,13 @@ function CapitalGains() {
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <div className={classes.root}>
+          <AppBar position="static">
+            <Toolbar>
+              <Button href="/article" color="inherit">
+                Articles
+              </Button>
+            </Toolbar>
+          </AppBar>
           <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }}>
             <Adsense
               client="ca-pub-1383291322337575"

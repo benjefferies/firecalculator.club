@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Calculator from './views/Calculator';
 import Pension from './views/Pension';
+import Articles from './views/Articles';
 import CapitalGains from './views/CapitalGains';
 import ReactGA from 'react-ga';
 
@@ -14,8 +15,9 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 export const routePaths = {
   root: '/calculator',
-  pension: '/pension',
-  capitalGains: '/capital-gains',
+  article: '/article',
+  pension: '/article/pension',
+  capitalGains: '/article/capital-gains',
 };
 
 export const Routes: React.FC = () => {
@@ -27,6 +29,7 @@ export const Routes: React.FC = () => {
           <Route path={routePaths.root} component={Calculator} />
           <Route path={routePaths.pension} component={Pension} />
           <Route path={routePaths.capitalGains} component={CapitalGains} />
+          <Route path={routePaths.article} component={Articles} />
           <Redirect path="*" to={`${r.match.url}calculator`} />
         </Switch>
       )}
