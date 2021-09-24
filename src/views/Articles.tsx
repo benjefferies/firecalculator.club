@@ -4,11 +4,13 @@ import {
   Box,
   Button,
   createTheme,
-  CssBaseline, makeStyles,
+  CssBaseline,
+  makeStyles,
   NoSsr,
   Theme,
   ThemeProvider,
-  Toolbar, useMediaQuery
+  Toolbar,
+  useMediaQuery,
 } from '@material-ui/core';
 import { useMemo } from 'react';
 import './Articles.scss';
@@ -78,7 +80,7 @@ function Articles() {
                       <figure>
                         <img
                           src="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8ZmluYW5jZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                          alt="Money"
+                          alt="Pensions"
                         />
                         <figcaption>
                           <h3>Pensions</h3>
@@ -92,7 +94,10 @@ function Articles() {
                     </li>
                     <li>
                       <figure>
-                        <img src="https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmluYW5jZSUyMGZ1bGwlMjB3aWR0aHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" />
+                        <img
+                          src="https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmluYW5jZSUyMGZ1bGwlMjB3aWR0aHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                          alt="Capital Gains"
+                        />
                         <figcaption>
                           <h3>Capital Gains</h3>
                         </figcaption>
@@ -106,7 +111,7 @@ function Articles() {
                       <figure>
                         <img
                           src="https://images.unsplash.com/photo-1624953901718-e24ee7200b85?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8ZmluYW5jZSUyMGZ1bGwlMjB3aWR0aHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                          alt="Three different glasses of beer"
+                          alt="Fire Calculator"
                         />
                         <figcaption>
                           <h3>Fire Calculator</h3>
