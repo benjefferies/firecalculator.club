@@ -94,7 +94,7 @@ function CapitalGains() {
                   Alice would be able to leverage the £12300 capital gains tax-free allowance and then she'd have to pay
                   capital gains tax at £2460 on the other £12300.
                 </Typography>
-                <img style={{ width: '1200px' }} src="images/capital-gains.png" alt="Capital Gains" />
+                <img style={{ width: '1200px' }} src="/images/capital-gains.png" alt="Capital Gains" />
                 <Typography variant="body1">
                   For ease of calculation, the investment doesn't grow over the next few years. Alice could split
                   selling the investment over two tax years instead of selling the investment over one tax year so she

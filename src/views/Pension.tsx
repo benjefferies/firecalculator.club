@@ -86,7 +86,7 @@ function Pension() {
                   than one needs. The pro's of investing tax-free outweigh the future taxation as it means you'll have a
                   higher projected annual return on investment.
                 </Typography>
-                <img style={{ width: '1200px' }} src="images/pension.png" alt="Pension" />
+                <img style={{ width: '1200px' }} src="/images/pension.png" alt="Pension" />
               </div>
               <div>
                 <Typography variant="h2">FIRE before retirement age</Typography>
