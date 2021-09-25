@@ -41,21 +41,21 @@ export const Routes: React.FC = () => {
       path="/"
       render={(r) => (
         <div>
-        <ThemeProvider theme={theme}>
-          <CssBaseline>
-        <AppBar position="static">
-          <Toolbar>
-            <Button href="https://blog.firecalculator.club" color="inherit" style={{marginLeft: "auto"}} >
-              blog
-            </Button>
-          </Toolbar>
-        </AppBar>
-          <Switch>
-            <Route path={routePaths.root} component={Calculator} />
-            <Redirect path="*" to={`${r.match.url}calculator`} />
-          </Switch>
-      </CssBaseline>
-    </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline>
+              <AppBar position="static">
+                <Toolbar>
+                  <Button href="https://blog.firecalculator.club" color="inherit" style={{ marginLeft: 'auto' }}>
+                    blog
+                  </Button>
+                </Toolbar>
+              </AppBar>
+              <Switch>
+                <Route path={routePaths.root} component={Calculator} />
+                <Redirect path="*" to={`${r.match.url}calculator`} />
+              </Switch>
+            </CssBaseline>
+          </ThemeProvider>
         </div>
       )}
     />
