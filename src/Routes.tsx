@@ -1,11 +1,8 @@
+import { AppBar, Button, createTheme, CssBaseline, ThemeProvider, Toolbar, useMediaQuery } from '@material-ui/core';
 import * as React from 'react';
+import ReactGA from 'react-ga';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Calculator from './views/Calculator';
-import Pension from './views/Pension';
-import Articles from './views/Articles';
-import CapitalGains from './views/CapitalGains';
-import ReactGA from 'react-ga';
-import { AppBar, Toolbar, Button, createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@material-ui/core';
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   console.log('Running development');
@@ -48,16 +45,13 @@ export const Routes: React.FC = () => {
           <CssBaseline>
         <AppBar position="static">
           <Toolbar>
-            <Button href="/article" color="inherit">
-              Articles
+            <Button href="https://blog.firecalculator.club" color="inherit" style={{marginLeft: "auto"}} >
+              blog
             </Button>
           </Toolbar>
         </AppBar>
           <Switch>
             <Route path={routePaths.root} component={Calculator} />
-            <Route path={routePaths.pension} component={Pension} />
-            <Route path={routePaths.capitalGains} component={CapitalGains} />
-            <Route path={routePaths.article} component={Articles} />
             <Redirect path="*" to={`${r.match.url}calculator`} />
           </Switch>
       </CssBaseline>

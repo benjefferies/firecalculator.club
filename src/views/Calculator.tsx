@@ -115,13 +115,13 @@ function Calculator() {
   return (
     <div className={classes.root}>
       <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }}>
-        <Adsense
+        {/* <Adsense
           client="ca-pub-1383291322337575"
           slot="7259870550"
           style={{ display: 'block' }}
           layout="in-article"
           format="fluid"
-        />
+        /> */}
         <NoSsr>
           <form className="firecalc__form-container" onSubmit={handleSubmit(onSubmit)}>
             <div className="firecalc__title-container">
