@@ -1,9 +1,7 @@
 // import { Adsense } from '@ctrl/react-adsense';
 import {
   Box,
-  Button,
-  createTheme,
-  FormControlLabel,
+  Button, FormControlLabel,
   Grid,
   InputAdornment,
   makeStyles,
@@ -14,10 +12,9 @@ import {
   TextFieldProps,
   Theme,
   Tooltip,
-  Typography,
-  useMediaQuery
+  Typography, useTheme
 } from '@material-ui/core';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
@@ -47,23 +44,7 @@ function calculateFire(data: FireData): Fire {
 }
 
 function Calculator() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const theme = useMemo(
-    () =>
-      createTheme({
-        spacing: 8,
-        palette: {
-          primary: {
-            main: '#ef5a00',
-          },
-          type: prefersDarkMode ? 'dark' : 'light',
-          background: {
-            default: prefersDarkMode ? '#000' : '#FFF',
-          },
-        },
-      }),
-    [prefersDarkMode]
-  );
+  const theme = useTheme();
   const classes = useStyles();
   const [fire, setFire] = useState<Fire>();
   const {
@@ -76,7 +57,7 @@ function Calculator() {
   } = useForm<FireData>({
     defaultValues: {
       calculationType: 'retire_age',
-      retirementFundAccessAge: 57
+      retirementFundAccessAge: 57,
     },
   });
 
@@ -436,9 +417,8 @@ function Calculator() {
                       <strong>
                         {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
                       </strong>{' '}
-                      until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your
-                      retirement investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
+                      until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your retirement
+                      investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
                     </div>
                   ) : (
                     <div className="firecalc__chart-text">
