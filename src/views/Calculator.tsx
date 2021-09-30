@@ -2,7 +2,8 @@
 import {
   Box,
   Button,
-  createTheme, FormControlLabel,
+  createTheme,
+  FormControlLabel,
   Grid,
   InputAdornment,
   makeStyles,
@@ -11,8 +12,10 @@ import {
   RadioGroup,
   TextField,
   TextFieldProps,
-  Theme, Typography,
-  useMediaQuery
+  Theme,
+  Tooltip,
+  Typography,
+  useMediaQuery,
 } from '@material-ui/core';
 import { useMemo, useState } from 'react';
 import Chart from 'react-apexcharts';
@@ -163,38 +166,42 @@ function Calculator() {
             </div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Retirement Fund"
-                  {...currencyTextFieldProps}
-                  label="Retirement Fund"
-                  error={errors.retirementFundTotal !== undefined}
-                  helperText={errors.retirementFundTotal?.message}
-                  {...register('retirementFundTotal', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip title="The amount you have in your retirement fund." arrow>
+                  <TextField
+                    aria-label="Retirement Fund"
+                    {...currencyTextFieldProps}
+                    label="Retirement Fund"
+                    error={errors.retirementFundTotal !== undefined}
+                    helperText={errors.retirementFundTotal?.message}
+                    {...register('retirementFundTotal', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Retirement Fund Annual Contribution"
-                  {...currencyTextFieldProps}
-                  label="Annual Contribution"
-                  error={errors.retirementFundAnnualInvestments !== undefined}
-                  helperText={errors.retirementFundAnnualInvestments?.message}
-                  {...register('retirementFundAnnualInvestments', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip title="The amount you will contribute to your retirement fund until you hit FIRE age." arrow>
+                  <TextField
+                    aria-label="Retirement Fund Annual Contribution"
+                    {...currencyTextFieldProps}
+                    label="Annual Contribution"
+                    error={errors.retirementFundAnnualInvestments !== undefined}
+                    helperText={errors.retirementFundAnnualInvestments?.message}
+                    {...register('retirementFundAnnualInvestments', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
 
@@ -205,38 +212,45 @@ function Calculator() {
             </div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Investment Fund"
-                  {...currencyTextFieldProps}
-                  label="Investment Fund"
-                  error={errors.generalFundTotal !== undefined}
-                  helperText={errors.generalFundTotal?.message}
-                  {...register('generalFundTotal', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip title="The amount you have in your general investment fund." arrow>
+                  <TextField
+                    aria-label="Investment Fund"
+                    {...currencyTextFieldProps}
+                    label="Investment Fund"
+                    error={errors.generalFundTotal !== undefined}
+                    helperText={errors.generalFundTotal?.message}
+                    {...register('generalFundTotal', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Annual Contribution"
-                  {...currencyTextFieldProps}
-                  label="Annual Contribution"
-                  error={errors.generalFundAnnualInvestments !== undefined}
-                  helperText={errors.generalFundAnnualInvestments?.message}
-                  {...register('generalFundAnnualInvestments', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip
+                  title="The amount you will contribute to your general investment fund until you hit FIRE age."
+                  arrow
+                >
+                  <TextField
+                    aria-label="Annual Contribution"
+                    {...currencyTextFieldProps}
+                    label="Annual Contribution"
+                    error={errors.generalFundAnnualInvestments !== undefined}
+                    helperText={errors.generalFundAnnualInvestments?.message}
+                    {...register('generalFundAnnualInvestments', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
 
@@ -247,38 +261,48 @@ function Calculator() {
             </div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Investing Return %"
-                  {...percentageTextFieldProps}
-                  label="Investing Return %"
-                  error={errors.investingRoi !== undefined}
-                  helperText={errors.investingRoi?.message}
-                  {...register('investingRoi', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip
+                  title="The percentage you expect your investments to return whilst investing before FIRE age."
+                  arrow
+                >
+                  <TextField
+                    aria-label="Investing Return %"
+                    {...percentageTextFieldProps}
+                    label="Investing Return %"
+                    error={errors.investingRoi !== undefined}
+                    helperText={errors.investingRoi?.message}
+                    {...register('investingRoi', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Drawdown Return %"
-                  {...percentageTextFieldProps}
-                  label="Drawdown Return %"
-                  error={errors.drawdownRoi !== undefined}
-                  helperText={errors.drawdownRoi?.message}
-                  {...register('drawdownRoi', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip
+                  title="The amount you expect your investments to return after FIRE age. Are you considering de-risking your investments?"
+                  arrow
+                >
+                  <TextField
+                    aria-label="Withdraw Return %"
+                    {...percentageTextFieldProps}
+                    label="Withdraw Return %"
+                    error={errors.drawdownRoi !== undefined}
+                    helperText={errors.drawdownRoi?.message}
+                    {...register('drawdownRoi', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
 
@@ -306,69 +330,75 @@ function Calculator() {
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  aria-label="Retirement Fund Age"
-                  {...ageTextFieldProps}
-                  label="Retirement Fund Age"
-                  error={errors.retirementFundAccessAge !== undefined}
-                  helperText={errors.retirementFundAccessAge?.message}
-                  {...register('retirementFundAccessAge', {
-                    required: 'This field is required',
-                    valueAsNumber: true,
-                    value: 57,
-                    min: {
-                      value: 0,
-                      message: "Can't be less than 0",
-                    },
-                  })}
-                />
+                <Tooltip title="The age you can start to access your retirement fund." arrow>
+                  <TextField
+                    aria-label="Retirement Fund Age"
+                    {...ageTextFieldProps}
+                    label="Retirement Fund Age"
+                    error={errors.retirementFundAccessAge !== undefined}
+                    helperText={errors.retirementFundAccessAge?.message}
+                    {...register('retirementFundAccessAge', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      value: 57,
+                      min: {
+                        value: 0,
+                        message: "Can't be less than 0",
+                      },
+                    })}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={6}>
                 {calculationType === 'retire_age' ? (
-                  <TextField
-                    aria-label="Target FIRE Age"
-                    {...ageTextFieldProps}
-                    label="Target FIRE Age"
-                    error={errors.targetAge !== undefined}
-                    helperText={errors.targetAge?.message}
-                    {...register('targetAge', {
-                      valueAsNumber: true,
-                      required: calculationType === 'retire_age' ? 'This field is required' : false,
-                      validate: (targetAge) => {
-                        if ((targetAge || 0) <= currentAge) {
-                          return 'Must be the same or more than current age';
-                        }
-                        if (
-                          generalFundAnnualInvestments === 0 &&
-                          generalFundTotal === 0 &&
-                          currentAge < retirementFundAccessAge
-                        ) {
-                          return `Must have investment fund to retire before ${retirementFundAccessAge}`;
-                        }
-                        return true;
-                      },
-                      min: {
-                        value: 0,
-                        message: "Can't be less than 0",
-                      },
-                    })}
-                  />
+                  <Tooltip title="The age you aim to FIRE." arrow>
+                    <TextField
+                      aria-label="Target FIRE Age"
+                      {...ageTextFieldProps}
+                      label="Target FIRE Age"
+                      error={errors.targetAge !== undefined}
+                      helperText={errors.targetAge?.message}
+                      {...register('targetAge', {
+                        valueAsNumber: true,
+                        required: calculationType === 'retire_age' ? 'This field is required' : false,
+                        validate: (targetAge) => {
+                          if ((targetAge || 0) <= currentAge) {
+                            return 'Must be the same or more than current age';
+                          }
+                          if (
+                            generalFundAnnualInvestments === 0 &&
+                            generalFundTotal === 0 &&
+                            currentAge < retirementFundAccessAge
+                          ) {
+                            return `Must have investment fund to retire before ${retirementFundAccessAge}`;
+                          }
+                          return true;
+                        },
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
+                      })}
+                    />
+                  </Tooltip>
                 ) : (
-                  <TextField
-                    aria-label="Target Drawdown"
-                    {...currencyTextFieldProps}
-                    label="Target Drawdown"
-                    error={errors.targetAnnualRoi !== undefined}
-                    helperText={errors.targetAnnualRoi?.message}
-                    {...register('targetAnnualRoi', {
-                      valueAsNumber: true,
-                      required: calculationType === 'retire_roi_amount',
-                      min: {
-                        value: 0,
-                        message: "Can't be less than 0",
-                      },
-                    })}
-                  />
+                  <Tooltip title="The amount you want to be able to sustainable withdraw during FIRE." arrow>
+                    <TextField
+                      aria-label="Target Drawdown"
+                      {...currencyTextFieldProps}
+                      label="Target Drawdown"
+                      error={errors.targetAnnualRoi !== undefined}
+                      helperText={errors.targetAnnualRoi?.message}
+                      {...register('targetAnnualRoi', {
+                        valueAsNumber: true,
+                        required: calculationType === 'retire_roi_amount',
+                        min: {
+                          value: 0,
+                          message: "Can't be less than 0",
+                        },
+                      })}
+                    />
+                  </Tooltip>
                 )}
               </Grid>
             </Grid>
