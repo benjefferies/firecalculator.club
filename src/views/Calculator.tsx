@@ -166,7 +166,7 @@ function Calculator() {
             </div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Tooltip enterTouchDelay={0} title="The amount you have in your retirement fund." arrow>
+                <Tooltip enterTouchDelay={10} title="The amount you have in your retirement fund." arrow>
                   <TextField
                     aria-label="Retirement Fund"
                     {...currencyTextFieldProps}
@@ -186,7 +186,7 @@ function Calculator() {
               </Grid>
               <Grid item xs={6}>
                 <Tooltip
-                  enterTouchDelay={0}
+                  enterTouchDelay={10}
                   title="The amount you will contribute to your retirement fund until you hit FIRE age."
                   arrow
                 >
@@ -216,7 +216,7 @@ function Calculator() {
             </div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Tooltip enterTouchDelay={0} title="The amount you have in your general investment fund." arrow>
+                <Tooltip enterTouchDelay={10} title="The amount you have in your general investment fund." arrow>
                   <TextField
                     aria-label="Investment Fund"
                     {...currencyTextFieldProps}
@@ -236,7 +236,7 @@ function Calculator() {
               </Grid>
               <Grid item xs={6}>
                 <Tooltip
-                  enterTouchDelay={0}
+                  enterTouchDelay={10}
                   title="The amount you will contribute to your general investment fund until you hit FIRE age."
                   arrow
                 >
@@ -267,7 +267,7 @@ function Calculator() {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Tooltip
-                  enterTouchDelay={0}
+                  enterTouchDelay={10}
                   title="The percentage you expect your investments to return whilst investing before FIRE age."
                   arrow
                 >
@@ -291,7 +291,7 @@ function Calculator() {
               <Grid item xs={6}>
                 <Tooltip
                   title="The amount you expect your investments to return after FIRE age. Are you considering de-risking your investments?"
-                  enterTouchDelay={0}
+                  enterTouchDelay={10}
                   arrow
                 >
                   <TextField
@@ -337,7 +337,7 @@ function Calculator() {
                 />
               </Grid>
               <Grid item xs={6}>
-                <Tooltip enterTouchDelay={0} title="The age you can start to access your retirement fund." arrow>
+                <Tooltip enterTouchDelay={10} title="The age you can start to access your retirement fund." arrow>
                   <TextField
                     aria-label="Retirement Fund Age"
                     {...ageTextFieldProps}
@@ -358,7 +358,7 @@ function Calculator() {
               </Grid>
               <Grid item xs={6}>
                 {calculationType === 'retire_age' ? (
-                  <Tooltip enterTouchDelay={0} title="The age you aim to FIRE." arrow>
+                  <Tooltip enterTouchDelay={10} title="The age you aim to FIRE." arrow>
                     <TextField
                       aria-label="Target FIRE Age"
                       {...ageTextFieldProps}
@@ -390,7 +390,7 @@ function Calculator() {
                   </Tooltip>
                 ) : (
                   <Tooltip
-                    enterTouchDelay={0}
+                    enterTouchDelay={10}
                     title="The amount you want to be able to sustainable withdraw during FIRE."
                     arrow
                   >
