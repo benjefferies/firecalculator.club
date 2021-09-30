@@ -12,10 +12,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 }
 
 export const routePaths = {
-  root: '/calculator',
-  article: '/article',
-  pension: '/article/pension',
-  capitalGains: '/article/capital-gains',
+  root: '/',
 };
 
 export const Routes: React.FC = () => {
@@ -52,7 +49,7 @@ export const Routes: React.FC = () => {
               </AppBar>
               <Switch>
                 <Route path={routePaths.root} component={Calculator} />
-                <Redirect path="*" to={`${r.match.url}calculator`} />
+                <Redirect path="*" to={`${r.match.url}`} />
               </Switch>
             </CssBaseline>
           </ThemeProvider>
