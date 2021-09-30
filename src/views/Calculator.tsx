@@ -15,7 +15,7 @@ import {
   Theme,
   Tooltip,
   Typography,
-  useMediaQuery,
+  useMediaQuery
 } from '@material-ui/core';
 import { useMemo, useState } from 'react';
 import Chart from 'react-apexcharts';
@@ -76,6 +76,7 @@ function Calculator() {
   } = useForm<FireData>({
     defaultValues: {
       calculationType: 'retire_age',
+      retirementFundAccessAge: 57
     },
   });
 
@@ -347,7 +348,6 @@ function Calculator() {
                     {...register('retirementFundAccessAge', {
                       required: 'This field is required',
                       valueAsNumber: true,
-                      value: 57,
                       min: {
                         value: 0,
                         message: "Can't be less than 0",
@@ -422,21 +422,21 @@ function Calculator() {
             <Grid container direction="column">
               {fire && (
                 <>
-                  {fire.fireAge < getValues('retirementFundAccessAge') ? (
+                  {fire.fireAge < retirementFundAccessAge ? (
                     <div className="firecalc__chart-text">
                       If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you
                       will have <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general
                       investments.
                       <br />
                       When you reach the retirement age of{' '}
-                      <strong>{Math.max(getValues('retirementFundAccessAge'), fire.fireAge)}</strong> you will have{' '}
+                      <strong>{Math.max(retirementFundAccessAge, fire.fireAge)}</strong> you will have{' '}
                       <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments.
                       <br /> From your general investments can drawdown{' '}
                       <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
                       <strong>
                         {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
                       </strong>{' '}
-                      until <strong>{getValues('retirementFundAccessAge')}</strong> then you can drawdown from your
+                      until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your
                       retirement investments{' '}
                       <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
                     </div>
