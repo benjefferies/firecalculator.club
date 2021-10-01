@@ -24,6 +24,7 @@ describe('FireService', () => {
         generalFundAnnualInvestments: 10,
         retirementFundAccessAge: 57,
         calculationType: 'retire_age',
+        endAge: 82,
       } as FireData);
       expect(fire).to.containSubset({
         drawdown: {
@@ -51,6 +52,7 @@ describe('FireService', () => {
         generalFundAnnualInvestments: 10,
         retirementFundAccessAge: 57,
         calculationType: 'retire_age',
+        endAge: 82,
       } as FireData);
       expect(fire).to.containSubset({
         drawdown: {
@@ -79,6 +81,7 @@ describe('FireService', () => {
           generalFundAnnualInvestments: 0,
           retirementFundAccessAge: 57,
           calculationType: 'retire_age',
+          endAge: 82,
         } as FireData)
       ).to.throw(Error);
     });
@@ -94,6 +97,7 @@ describe('FireService', () => {
         generalFundAnnualInvestments: 10,
         retirementFundAccessAge: 57,
         calculationType: 'retire_age',
+        endAge: 82,
       });
       expect(fire).to.containSubset({
         drawdown: {
@@ -124,6 +128,7 @@ describe('FireService', () => {
         generalFundAnnualInvestments: 10,
         retirementFundAccessAge: 57,
         calculationType: 'retire_age',
+        endAge: 82,
       });
       expect(fire).to.containSubset({
         drawdown: {
@@ -154,6 +159,7 @@ describe('FireService', () => {
         generalFundAnnualInvestments: 10,
         retirementFundAccessAge: 57,
         calculationType: 'retire_age',
+        endAge: 82,
       });
       expect(fire).to.containSubset({
         drawdown: {
@@ -185,6 +191,7 @@ describe('FireService', () => {
       generalFundAnnualInvestments: 10,
       retirementFundAccessAge: 57,
       calculationType: 'retire_age',
+      endAge: 82,
     });
     expect(fire).to.containSubset({
       drawdown: {
@@ -217,6 +224,7 @@ describe('FireService', () => {
       generalFundAnnualInvestments: 10,
       retirementFundAccessAge: 57,
       calculationType: 'retire_age',
+      endAge: 82,
     });
     expect(fire).to.containSubset({
       drawdown: {
@@ -247,6 +255,7 @@ describe('FireService', () => {
       generalFundAnnualInvestments: 10,
       retirementFundAccessAge: 57,
       calculationType: 'retire_age',
+      endAge: 82,
     });
     expect(fire).to.containSubset({
       drawdown: {
@@ -279,6 +288,7 @@ describe('FireService', () => {
         retirementFundAnnualInvestments: 1000,
         generalFundAnnualInvestments: 1000,
         calculationType: 'retire_roi_amount',
+        endAge: 82,
       });
       expect(fire).to.containSubset({
         drawdown: {
@@ -311,6 +321,7 @@ describe('FireService', () => {
         retirementFundAnnualInvestments: 2000,
         generalFundAnnualInvestments: 2000,
         calculationType: 'retire_roi_amount',
+        endAge: 82,
       });
       expect(fire).to.containSubset({
         drawdown: {

@@ -76,7 +76,8 @@ function Calculator() {
   } = useForm<FireData>({
     defaultValues: {
       calculationType: 'retire_age',
-      retirementFundAccessAge: 57
+      retirementFundAccessAge: 57,
+      endAge: 82,
     },
   });
 
@@ -85,13 +86,15 @@ function Calculator() {
     const fire = calculateFire(data);
     setFire(fire);
   };
-  const [calculationType, currentAge, generalFundAnnualInvestments, generalFundTotal, retirementFundAccessAge] = watch([
-    'calculationType',
-    'currentAge',
-    'generalFundAnnualInvestments',
-    'generalFundTotal',
-    'retirementFundAccessAge',
-  ]);
+  const [calculationType, currentAge, generalFundAnnualInvestments, generalFundTotal, retirementFundAccessAge, endAge] =
+    watch([
+      'calculationType',
+      'currentAge',
+      'generalFundAnnualInvestments',
+      'generalFundTotal',
+      'retirementFundAccessAge',
+      'endAge',
+    ]);
 
   const commonProps = {
     variant: 'outlined',
@@ -338,6 +341,25 @@ function Calculator() {
                 />
               </Grid>
               <Grid item xs={6}>
+                <Tooltip enterTouchDelay={30} title="The age you would like you money to last until." arrow>
+                  <TextField
+                    aria-label="Last Until Age"
+                    {...ageTextFieldProps}
+                    label="Last Until"
+                    error={errors.endAge !== undefined}
+                    helperText={errors.endAge?.message}
+                    {...register('endAge', {
+                      required: 'This field is required',
+                      valueAsNumber: true,
+                      min: {
+                        value: currentAge,
+                        message: `Can't be less than ${currentAge}`,
+                      },
+                    })}
+                  />
+                </Tooltip>
+              </Grid>
+              <Grid item xs={6}>
                 <Tooltip enterTouchDelay={30} title="The age you can start to access your retirement fund." arrow>
                   <TextField
                     aria-label="Retirement Fund Age"
@@ -438,7 +460,8 @@ function Calculator() {
                       </strong>{' '}
                       until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your
                       retirement investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
+                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong> until{' '}
+                      <strong>{endAge}</strong>
                     </div>
                   ) : (
                     <div className="firecalc__chart-text">

@@ -1,5 +1,3 @@
-export const AVERAGE_LIFE_EXPECTANCY = 82;
-
 export type Graph = {
   [age: number]: number;
 }
@@ -47,4 +45,5 @@ export type FireData = {
   retirementFundAccessAge: number;
   targetAge?: number;
   targetAnnualRoi?: number;
+  endAge: number;
 };

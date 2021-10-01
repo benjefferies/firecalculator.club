@@ -1,4 +1,4 @@
-import { AVERAGE_LIFE_EXPECTANCY, Fire, FireData, Graph, InvestmentGrowth } from '../types/types';
+import { Fire, FireData, Graph, InvestmentGrowth } from '../types/types';
 
 export function compoundInterest(principal: number, rate: number, time: number = 1, timesPerYear: number = 1) {
   const amount = principal * Math.pow(1 + (rate * 0.01) / timesPerYear, timesPerYear * time);
@@ -57,14 +57,16 @@ export function calculateFireAmountBasedOnDesiredRoi(desiredAnnualRoi: number, d
         fireAge,
         generalInvestmentAmount,
         generalDrawdownAmount,
-        data.drawdownRoi
+        data.drawdownRoi,
+        data.endAge
       ),
       retirementDrawdownAmount: retirementDrawdownAmount,
       retirementDrawdownGraph: calculateDrawdownGraph(
         Math.max(fireAge, data.retirementFundAccessAge),
         retirementInvestmentAmount,
         retirementDrawdownAmount,
-        data.drawdownRoi
+        data.drawdownRoi,
+        data.endAge
       ),
     },
     growth: {
@@ -130,8 +132,8 @@ export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, 
     targetFireAge
   );
   const yearsGeneralNeedsToLast =
-    (hasRetirementFund && !isRetired ? data.retirementFundAccessAge : AVERAGE_LIFE_EXPECTANCY) - targetFireAge;
-  const yearsPensionNeedsToLast = AVERAGE_LIFE_EXPECTANCY - Math.max(targetFireAge, data.retirementFundAccessAge);
+    (hasRetirementFund && !isRetired ? data.retirementFundAccessAge : data.endAge) - targetFireAge;
+  const yearsPensionNeedsToLast = data.endAge - Math.max(targetFireAge, data.retirementFundAccessAge);
   const generalDrawdownAmount = drawdown(generalAmountAtFireAge.total, data.drawdownRoi, yearsGeneralNeedsToLast);
   const retirementDrawdownAmount = drawdown(
     retirementAmountAfterFireAge.total,
@@ -142,13 +144,15 @@ export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, 
     targetFireAge,
     generalAmountAtFireAge.total,
     generalDrawdownAmount,
-    data.drawdownRoi
+    data.drawdownRoi,
+    data.endAge
   );
   const retirementDrawdownGraph = calculateDrawdownGraph(
     Math.max(targetFireAge, data.retirementFundAccessAge),
     retirementAmountAfterFireAge.total,
     retirementDrawdownAmount,
-    data.drawdownRoi
+    data.drawdownRoi,
+    data.endAge
   );
   const retirementGrowthGraph = {
     ...retirementAmountInvestingToDesiredFireAge.graph,
@@ -174,9 +178,9 @@ export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, 
   return fire;
 }
 
-function calculateDrawdownGraph(age: number, total: number, drawdown: number, roi: number): Graph {
+function calculateDrawdownGraph(age: number, total: number, drawdown: number, roi: number, endAge: number): Graph {
   const graph: Graph = {};
-  while (total >= 0 && age <= AVERAGE_LIFE_EXPECTANCY) {
+  while (total >= 0 && age <= endAge) {
     total = total - drawdown + compoundInterest(total, roi, 1);
     graph[age] = Math.max(total, 0);
     age++;
