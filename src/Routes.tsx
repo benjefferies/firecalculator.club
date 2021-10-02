@@ -1,8 +1,10 @@
-import { AppBar, Button, createTheme, CssBaseline, ThemeProvider, Toolbar, useMediaQuery } from '@material-ui/core';
+import { AppBar, createTheme, CssBaseline, ThemeProvider, Toolbar, useMediaQuery } from '@material-ui/core';
 import * as React from 'react';
 import ReactGA from 'react-ga';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import Calculator from './views/Calculator';
+import { Blog } from './views/Blog';
+import './Routes.scss'
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   console.log('Running development');
@@ -13,6 +15,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 export const routePaths = {
   root: '/',
+  blog: '/blog'
 };
 
 export const Routes: React.FC = () => {
@@ -42,14 +45,17 @@ export const Routes: React.FC = () => {
             <CssBaseline>
               <AppBar position="static">
                 <Toolbar>
-                  <Button href="https://blog.firecalculator.club" color="inherit" style={{ marginLeft: 'auto' }}>
-                    blog
-                  </Button>
+                  <Link className="animated" to="/">Home</Link>
+                  <Link className="animated" to="/blog">Blog</Link>
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route path={routePaths.root} component={Calculator} />
-                <Redirect path="*" to={`${r.match.url}`} />
+                <Route path="/">
+                  <Calculator />
+                </Route>
+                <Route path="/blog">
+                  <Blog />
+                </Route>
               </Switch>
             </CssBaseline>
           </ThemeProvider>
