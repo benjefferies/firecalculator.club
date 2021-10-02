@@ -44,9 +44,12 @@ export const Routes: React.FC = () => {
           <ThemeProvider theme={theme}>
             <CssBaseline>
               <AppBar position="static">
-                <Toolbar>
+                <Toolbar className="toolbar">
+                  <div className="logo">FireCalculator.club</div>
+                  <div className="link__container">
                   <Link className="animated" to="/">Home</Link>
                   <Link className="animated" to="/blog">Blog</Link>
+                  </div>
                 </Toolbar>
               </AppBar>
               <Switch>
