@@ -17,7 +17,7 @@ import {
   Typography,
   useMediaQuery
 } from '@material-ui/core';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
@@ -81,11 +81,17 @@ function Calculator() {
     },
   });
 
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+
   const onSubmit = (data: FireData) => {
     ReactGA.event({ category: 'fire', action: 'calculate' });
     const fire = calculateFire(data);
     setFire(fire);
   };
+  useEffect(() => {
+    // Timeout as chart doesn't render immediately so it scrolls to empty div
+    setTimeout(() => scrollRef?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' }), 500);
+  }, [fire]);
   const [calculationType, currentAge, generalFundAnnualInvestments, generalFundTotal, retirementFundAccessAge, endAge] =
     watch([
       'calculationType',
@@ -118,7 +124,6 @@ function Calculator() {
       startAdornment: <InputAdornment position="start">%</InputAdornment>,
     },
   } as TextFieldProps;
-
   return (
     <div className={classes.root}>
       <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }}>
@@ -458,9 +463,8 @@ function Calculator() {
                       <strong>
                         {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
                       </strong>{' '}
-                      until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your
-                      retirement investments{' '}
-                      <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong> until{' '}
+                      until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your retirement
+                      investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong> until{' '}
                       <strong>{endAge}</strong>
                     </div>
                   ) : (
@@ -475,82 +479,84 @@ function Calculator() {
                       investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
                     </div>
                   )}
-                  <Chart
-                    options={{
-                      stroke: {
-                        curve: 'straight',
-                      },
-                      markers: {
-                        size: 2,
-                      },
-                      legend: {
-                        labels: {
-                          colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
+                  <div ref={scrollRef}>
+                    <Chart
+                      options={{
+                        stroke: {
+                          curve: 'straight',
                         },
-                      },
-                      tooltip: {
-                        fillSeriesColor: true,
-                      },
-                      yaxis: {
-                        labels: {
-                          formatter: (value: number) => {
-                            return formatCurrency(value);
-                          },
-                          style: {
+                        markers: {
+                          size: 2,
+                        },
+                        legend: {
+                          labels: {
                             colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
                           },
                         },
-                      },
-                      xaxis: {
-                        type: 'numeric',
-                        labels: {
-                          style: {
-                            colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
+                        tooltip: {
+                          fillSeriesColor: true,
+                        },
+                        yaxis: {
+                          labels: {
+                            formatter: (value: number) => {
+                              return formatCurrency(value);
+                            },
+                            style: {
+                              colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
+                            },
                           },
                         },
-                        tickAmount:
-                          window.innerWidth < 800
-                            ? 10
-                            : Object.keys({
-                                ...fire.growth?.generalGrowthGraph,
-                                ...fire.drawdown.generalDrawdownGraph,
-                              }).length,
-                      },
-                    }}
-                    series={[
-                      {
-                        data: Object.keys({
-                          ...fire.growth?.generalGrowthGraph,
-                          ...fire.drawdown.generalDrawdownGraph,
-                        }).map((k) => {
-                          const merged = {
+                        xaxis: {
+                          type: 'numeric',
+                          labels: {
+                            style: {
+                              colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
+                            },
+                          },
+                          tickAmount:
+                            window.innerWidth < 800
+                              ? 10
+                              : Object.keys({
+                                  ...fire.growth?.generalGrowthGraph,
+                                  ...fire.drawdown.generalDrawdownGraph,
+                                }).length,
+                        },
+                      }}
+                      series={[
+                        {
+                          data: Object.keys({
                             ...fire.growth?.generalGrowthGraph,
                             ...fire.drawdown.generalDrawdownGraph,
-                          };
-                          const kNum = Number.parseInt(k);
-                          const formattedAmount = merged[kNum].toFixed(2);
-                          return [kNum, formattedAmount];
-                        }),
-                        name: 'General Investments',
-                      },
-                      {
-                        data: Object.keys({
-                          ...fire.growth?.retirementGrowthGraph,
-                          ...fire.drawdown.retirementDrawdownGraph,
-                        }).map((k) => {
-                          const merged = {
+                          }).map((k) => {
+                            const merged = {
+                              ...fire.growth?.generalGrowthGraph,
+                              ...fire.drawdown.generalDrawdownGraph,
+                            };
+                            const kNum = Number.parseInt(k);
+                            const formattedAmount = merged[kNum].toFixed(2);
+                            return [kNum, formattedAmount];
+                          }),
+                          name: 'General Investments',
+                        },
+                        {
+                          data: Object.keys({
                             ...fire.growth?.retirementGrowthGraph,
                             ...fire.drawdown.retirementDrawdownGraph,
-                          };
-                          const kNum = Number.parseInt(k);
-                          return [kNum, merged[kNum]];
-                        }),
-                        name: 'Retirement Investments',
-                      },
-                    ]}
-                    type="line"
-                    width="100%"
-                  />
+                          }).map((k) => {
+                            const merged = {
+                              ...fire.growth?.retirementGrowthGraph,
+                              ...fire.drawdown.retirementDrawdownGraph,
+                            };
+                            const kNum = Number.parseInt(k);
+                            return [kNum, merged[kNum]];
+                          }),
+                          name: 'Retirement Investments',
+                        },
+                      ]}
+                      type="line"
+                      width="100%"
+                    />
+                  </div>
                 </>
               )}
             </Grid>
