@@ -16,6 +16,26 @@ $breakpoint-mobile: 576px;
     margin: 0;
     padding: 0;
   }
+  &__read-more {
+    color: grey;
+    padding: 5px 0 20px 0;
+    font-weight: 400;
+    font-family: 'Roboto';
+    font-size: 14px;
+    text-decoration: none;
+    
+    :visited {
+      color: grey;
+      text-decoration: none;
+    }
+    :hover {
+      color: orange;
+      text-decoration: underline;
+    }
+    a {
+      text-decoration: none;
+    }
+  }
 
   &__hero {
     display: flex;

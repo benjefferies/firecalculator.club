@@ -4,6 +4,7 @@ import ReactGA from 'react-ga';
 import { Link, Route, Switch } from 'react-router-dom';
 import Calculator from './views/Calculator';
 import { Blog } from './views/Blog';
+import { BlogHome } from './views/BlogHome';
 import './Routes.scss'
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -48,16 +49,19 @@ export const Routes: React.FC = () => {
                   <div className="logo">FireCalculator.club</div>
                   <div className="link__container">
                   <Link className="animated" to="/">Home</Link>
-                  <Link className="animated" to="/blog">Blog</Link>
+                  <Link className="animated" to="/blog-home">Blog</Link>
                   </div>
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route path="/">
+                <Route exact path="/">
                   <Calculator />
                 </Route>
                 <Route path="/blog">
                   <Blog />
+                </Route>
+                <Route path="/blog-home">
+                  <BlogHome />
                 </Route>
               </Switch>
             </CssBaseline>
