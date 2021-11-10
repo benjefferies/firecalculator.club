@@ -6,6 +6,11 @@ use(chaiSubset);
 describe('CurrencyService', () => {
   const languageGetter = jest.spyOn(window.navigator, 'language', 'get');
 
+  test('format currency en no country', () => {
+    languageGetter.mockReturnValue('en');
+    expect(formatCurrency(10)).to.equal('£10.00');
+  });
+
   test('format currency GBP', () => {
     languageGetter.mockReturnValue('en-GB');
     expect(formatCurrency(10)).to.equal('£10.00');
