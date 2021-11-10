@@ -21,6 +21,11 @@ describe('CurrencyService', () => {
     expect(formatCurrency(10)).to.equal('$10.00');
   });
 
+  test('get currency en no country', () => {
+    languageGetter.mockReturnValue('en');
+    expect(getCurrency()).to.equal('£');
+  });
+
   test('get currency symbol GBP', () => {
     languageGetter.mockReturnValue('en-GB');
     expect(getCurrency()).to.be.equal('£');
