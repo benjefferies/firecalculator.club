@@ -1,18 +1,22 @@
 import {
   Box,
-  Button, Checkbox, createTheme,
+  Button,
+  Checkbox,
+  createTheme,
   FormControlLabel,
   Grid,
   InputAdornment,
   makeStyles,
-  NoSsr, Popover, Radio,
+  NoSsr,
+  Popover,
+  Radio,
   RadioGroup,
   TextField,
   TextFieldProps,
   Theme,
   Tooltip,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from '@material-ui/core';
 import queryString from 'query-string';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -465,6 +469,7 @@ function Calculator() {
                               onChange={(e) => {
                                 field.onChange(e);
                               }}
+                              defaultChecked={field.value}
                             />
                           }
                           label={`Take General Investment Until ${endAge}`}
