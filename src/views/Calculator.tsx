@@ -1,25 +1,21 @@
 import {
   Box,
-  Button,
-  createTheme,
+  Button, Checkbox, createTheme,
   FormControlLabel,
   Grid,
   InputAdornment,
   makeStyles,
-  NoSsr,
-  Radio,
+  NoSsr, Popover, Radio,
   RadioGroup,
   TextField,
   TextFieldProps,
   Theme,
   Tooltip,
   Typography,
-  useMediaQuery,
-  Popover,
-  Checkbox,
+  useMediaQuery
 } from '@material-ui/core';
 import queryString from 'query-string';
-import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
