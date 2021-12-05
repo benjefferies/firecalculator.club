@@ -14,9 +14,12 @@ import {
   Theme,
   Tooltip,
   Typography,
-  useMediaQuery
+  useMediaQuery,
+  Popover,
+  Checkbox,
 } from '@material-ui/core';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import queryString from 'query-string';
+import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
 import ReactGA from 'react-ga';
 import { Controller, useForm } from 'react-hook-form';
@@ -63,6 +66,7 @@ function Calculator() {
       }),
     [prefersDarkMode]
   );
+  const queries = queryString.parse(window.location.hash);
   const classes = useStyles();
   const [fire, setFire] = useState<Fire>();
   const {
@@ -77,6 +81,8 @@ function Calculator() {
       calculationType: 'retire_age',
       retirementFundAccessAge: 57,
       endAge: 82,
+      ...queries,
+      useGeneralUntilEnd: queries?.useGeneralUntilEnd === 'true',
     },
   });
 
@@ -86,7 +92,9 @@ function Calculator() {
     ReactGA.event({ category: 'fire', action: 'calculate' });
     const fire = calculateFire(data);
     setFire(fire);
+    window.location.hash = queryString.stringify(data);
   };
+
   useEffect(() => {
     // Timeout as chart doesn't render immediately so it scrolls to empty div
     setTimeout(() => scrollRef?.current?.scrollIntoView({ block: 'end', behavior: 'smooth' }), 500);
@@ -123,6 +131,17 @@ function Calculator() {
       startAdornment: <InputAdornment position="start">%</InputAdornment>,
     },
   } as TextFieldProps;
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   return (
     <div className={classes.root}>
       <Box mx={{ xs: 1, sm: 4, md: 16, lg: 32 }}>
@@ -388,7 +407,7 @@ function Calculator() {
                         valueAsNumber: true,
                         required: calculationType === 'retire_age' ? 'This field is required' : false,
                         validate: (targetAge) => {
-                          if ((targetAge || 0) <= currentAge) {
+                          if ((targetAge || 0) < currentAge) {
                             return 'Must be the same or more than current age';
                           }
                           if (
@@ -431,11 +450,61 @@ function Calculator() {
                   </Tooltip>
                 )}
               </Grid>
+              {calculationType === 'retire_age' && (
+                <Grid item xs={6}>
+                  <Tooltip
+                    enterTouchDelay={30}
+                    title="Spread general investments drawdown until you want your money to last until instead of drawing before retirement."
+                    arrow
+                  >
+                    <Controller
+                      name="useGeneralUntilEnd"
+                      control={control}
+                      defaultValue={false}
+                      render={({ field }) => (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+                          }
+                          label={`Take General Investment Until ${endAge}`}
+                        />
+                      )}
+                    />
+                  </Tooltip>
+                </Grid>
+              )}
             </Grid>
             <Grid className="firecalc__button-container">
               <Button className="firecalc__button" variant="contained" type="submit">
                 Calculate
               </Button>
+              <Button
+                className="firecalc__button"
+                variant="contained"
+                onClick={(event) => {
+                  handleClick(event);
+                  navigator.clipboard.writeText(window.location.href);
+                }}
+              >
+                Share
+              </Button>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+              >
+                <Typography className="firecalc__popover">Copied Link</Typography>
+              </Popover>
             </Grid>
 
             <Grid container direction="column">
@@ -505,13 +574,17 @@ function Calculator() {
                               colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
                             },
                           },
+                          decimalsInFloat: 0,
                           tickAmount:
                             window.innerWidth < 800
                               ? 10
-                              : Object.keys({
-                                  ...fire.growth?.generalGrowthGraph,
-                                  ...fire.drawdown.generalDrawdownGraph,
-                                }).length,
+                              : Math.min(
+                                  Object.keys({
+                                    ...fire.growth?.generalGrowthGraph,
+                                    ...fire.drawdown.generalDrawdownGraph,
+                                  }).length,
+                                  30
+                                ),
                         },
                       }}
                       series={[

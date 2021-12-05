@@ -46,4 +46,5 @@ export type FireData = {
   targetAge?: number;
   targetAnnualRoi?: number;
   endAge: number;
+  useGeneralUntilEnd: boolean;
 };

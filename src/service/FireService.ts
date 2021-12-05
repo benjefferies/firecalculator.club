@@ -105,7 +105,7 @@ function calculateCompoundInterestWithAnnualInvestment(
 
 export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, data: FireData): Fire {
   const isRetired = data.currentAge >= data.retirementFundAccessAge;
-  const hasRetirementFund = data.retirementFundTotal || data.retirementFundAnnualInvestments;
+  const hasRetirementFund = (data.retirementFundTotal || data.retirementFundAnnualInvestments) > 0;
   const hasInvestmentFund = data.generalFundAnnualInvestments || data.generalFundTotal;
   if (hasRetirementFund && !hasInvestmentFund && targetFireAge < data.retirementFundAccessAge) {
     throw new Error('Cannot FIRE before accessing pension without investment fund');
@@ -131,8 +131,11 @@ export function calculateFireAmountBasedOnDesiredFireAge(targetFireAge: number, 
     data.currentAge,
     targetFireAge
   );
+  const fireIsOnOrAfterRetirementFundAccessAge = targetFireAge >= data.retirementFundAccessAge;
   const yearsGeneralNeedsToLast =
-    (hasRetirementFund && !isRetired ? data.retirementFundAccessAge : data.endAge) - targetFireAge;
+    fireIsOnOrAfterRetirementFundAccessAge || !hasRetirementFund || isRetired || data.useGeneralUntilEnd
+      ? data.endAge - targetFireAge
+      : data.retirementFundAccessAge - targetFireAge;
   const yearsPensionNeedsToLast = data.endAge - Math.max(targetFireAge, data.retirementFundAccessAge);
   const generalDrawdownAmount = drawdown(generalAmountAtFireAge.total, data.drawdownRoi, yearsGeneralNeedsToLast);
   const retirementDrawdownAmount = drawdown(
