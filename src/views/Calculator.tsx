@@ -507,126 +507,126 @@ function Calculator() {
                 <Typography className="firecalc__popover">Copied Link</Typography>
               </Popover>
             </Grid>
+          </form>
 
-            <Grid container direction="column">
-              {fire && (
-                <>
-                  {fire.fireAge < retirementFundAccessAge ? (
-                    <div className="firecalc__chart-text">
-                      If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you
-                      will have <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general
-                      investments.
-                      <br />
-                      When you reach the retirement age of{' '}
-                      <strong>{Math.max(retirementFundAccessAge, fire.fireAge)}</strong> you will have{' '}
-                      <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments.
-                      <br /> From your general investments can drawdown{' '}
-                      <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
-                      <strong>
-                        {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
-                      </strong>{' '}
-                      until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your retirement
-                      investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong> until{' '}
-                      <strong>{endAge}</strong>
-                    </div>
-                  ) : (
-                    <div className="firecalc__chart-text">
-                      If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you
-                      will have <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general
-                      investments and <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your
-                      retirement investments.
-                      <br />
-                      From your general investments can drawdown{' '}
-                      <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement
-                      investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
-                    </div>
-                  )}
-                  <div ref={scrollRef}>
-                    <Chart
-                      options={{
-                        stroke: {
-                          curve: 'straight',
+          <Grid container direction="column">
+            {fire && (
+              <>
+                {fire.fireAge < retirementFundAccessAge ? (
+                  <div className="firecalc__chart-text">
+                    If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you
+                    will have <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general
+                    investments.
+                    <br />
+                    When you reach the retirement age of{' '}
+                    <strong>{Math.max(retirementFundAccessAge, fire.fireAge)}</strong> you will have{' '}
+                    <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your retirement investments.
+                    <br /> From your general investments can drawdown{' '}
+                    <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> from{' '}
+                    <strong>
+                      {getValues('calculationType') === 'retire_roi_amount' ? fire.fireAge : getValues('targetAge')}
+                    </strong>{' '}
+                    until <strong>{retirementFundAccessAge}</strong> then you can drawdown from your retirement
+                    investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong> until{' '}
+                    <strong>{endAge}</strong>
+                  </div>
+                ) : (
+                  <div className="firecalc__chart-text">
+                    If you <span className="firecalc__highlighted">FIRE</span> at <strong>{fire.fireAge}</strong> you
+                    will have <strong>{formatCurrency(fire.growth.generalFundAtFire)}</strong> in your general
+                    investments and <strong>{formatCurrency(fire.growth.retirementFundTotal)}</strong> in your
+                    retirement investments.
+                    <br />
+                    From your general investments can drawdown{' '}
+                    <strong>{formatCurrency(fire.drawdown.generalDrawdownAmount)}</strong> and from your retirement
+                    investments <strong>{`${formatCurrency(fire.drawdown.retirementDrawdownAmount)}`}</strong>
+                  </div>
+                )}
+                <div ref={scrollRef}>
+                  <Chart
+                    options={{
+                      stroke: {
+                        curve: 'straight',
+                      },
+                      markers: {
+                        size: 2,
+                      },
+                      legend: {
+                        labels: {
+                          colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
                         },
-                        markers: {
-                          size: 2,
-                        },
-                        legend: {
-                          labels: {
+                      },
+                      tooltip: {
+                        fillSeriesColor: true,
+                      },
+                      yaxis: {
+                        labels: {
+                          formatter: (value: number) => {
+                            return formatCurrency(value);
+                          },
+                          style: {
                             colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
                           },
                         },
-                        tooltip: {
-                          fillSeriesColor: true,
-                        },
-                        yaxis: {
-                          labels: {
-                            formatter: (value: number) => {
-                              return formatCurrency(value);
-                            },
-                            style: {
-                              colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
-                            },
+                      },
+                      xaxis: {
+                        type: 'numeric',
+                        labels: {
+                          style: {
+                            colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
                           },
                         },
-                        xaxis: {
-                          type: 'numeric',
-                          labels: {
-                            style: {
-                              colors: theme.palette.type === 'dark' ? '#FFF' : '#000',
-                            },
-                          },
-                          decimalsInFloat: 0,
-                          tickAmount:
-                            window.innerWidth < 800
-                              ? 10
-                              : Math.min(
-                                  Object.keys({
-                                    ...fire.growth?.generalGrowthGraph,
-                                    ...fire.drawdown.generalDrawdownGraph,
-                                  }).length,
-                                  30
-                                ),
-                        },
-                      }}
-                      series={[
-                        {
-                          data: Object.keys({
-                            ...fire.growth?.generalGrowthGraph,
-                            ...fire.drawdown.generalDrawdownGraph,
-                          }).map((k) => {
-                            const merged = {
-                              ...fire.growth?.generalGrowthGraph,
-                              ...fire.drawdown.generalDrawdownGraph,
-                            };
-                            const kNum = Number.parseInt(k);
-                            const formattedAmount = merged[kNum].toFixed(2);
-                            return [kNum, formattedAmount];
-                          }),
-                          name: 'General Investments',
-                        },
-                        {
-                          data: Object.keys({
-                            ...fire.growth?.retirementGrowthGraph,
-                            ...fire.drawdown.retirementDrawdownGraph,
-                          }).map((k) => {
-                            const merged = {
-                              ...fire.growth?.retirementGrowthGraph,
-                              ...fire.drawdown.retirementDrawdownGraph,
-                            };
-                            const kNum = Number.parseInt(k);
-                            return [kNum, merged[kNum]];
-                          }),
-                          name: 'Retirement Investments',
-                        },
-                      ]}
-                      type="line"
-                      width="100%"
-                    />
-                  </div>
-                </>
-              )}
-            </Grid>
-          </form>
+                        decimalsInFloat: 0,
+                        tickAmount:
+                          window.innerWidth < 800
+                            ? 10
+                            : Math.min(
+                                Object.keys({
+                                  ...fire.growth?.generalGrowthGraph,
+                                  ...fire.drawdown.generalDrawdownGraph,
+                                }).length,
+                                30
+                              ),
+                      },
+                    }}
+                    series={[
+                      {
+                        data: Object.keys({
+                          ...fire.growth?.generalGrowthGraph,
+                          ...fire.drawdown.generalDrawdownGraph,
+                        }).map((k) => {
+                          const merged = {
+                            ...fire?.growth?.generalGrowthGraph,
+                            ...fire?.drawdown.generalDrawdownGraph,
+                          };
+                          const kNum = Number.parseInt(k);
+                          const formattedAmount = merged[kNum].toFixed(2);
+                          return [kNum, formattedAmount];
+                        }),
+                        name: 'General Investments',
+                      },
+                      {
+                        data: Object.keys({
+                          ...fire.growth?.retirementGrowthGraph,
+                          ...fire.drawdown.retirementDrawdownGraph,
+                        }).map((k) => {
+                          const merged = {
+                            ...fire?.growth?.retirementGrowthGraph,
+                            ...fire?.drawdown.retirementDrawdownGraph,
+                          };
+                          const kNum = Number.parseInt(k);
+                          return [kNum, merged[kNum]];
+                        }),
+                        name: 'Retirement Investments',
+                      },
+                    ]}
+                    type="line"
+                    width="100%"
+                  />
+                </div>
+              </>
+            )}
+          </Grid>
         </NoSsr>
       </Box>
     </div>
