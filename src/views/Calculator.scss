@@ -55,6 +55,8 @@ body {
     // background: #181818;
     margin: 0;
     padding: 60px 0 30px;
+    max-width: 600px;
+    margin: auto;
   }
 
   &__highlighted {
@@ -124,6 +126,10 @@ body {
     padding: 30px;
   }
 
+  &__button-container button {
+    margin-inline: 5px;
+  }
+
   &__button {
     // color: pink;
     font-size: 20px;
@@ -131,12 +137,16 @@ body {
     // background-color: #111;
   }
 
+  &__results-header {
+    display: flex;
+    justify-content: center;
+  }
+
   &__popover {
     color: white;
-    font-size: 20px;
+    font-size: 10px;
     font-weight: 600;
-    padding: 15px;
-    background-color: #5e5e5e;
+    padding: 0px 20px 0px 20px;
   }
 }
 
