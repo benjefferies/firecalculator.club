@@ -1,5 +1,7 @@
 # Fire Calculator
 
+https://firecalculator.club
+
 Calculate your fire age based on your desired ROI or calculate your ROI based on your fire age
 
 ## Available Scripts
